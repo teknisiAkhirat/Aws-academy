@@ -4,29 +4,40 @@ document: tasks
 status: draft
 ---
 
-# Tasks — Audio Subtitle Player
+# Tasks - Audio Subtitle Player (ASP)
 
-Dokumen ini adalah **pekerjaan yang harus dijalankan**, diturunkan dari `requirement.md` (sumber kebutuhan) dan `design.md` (sumber keputusan UI/UX). Tidak ada ide baru di sini; setiap task harus bisa ditelusuri ke ID di kedua dokumen.
+Dokumen ini adalah **pekerjaan yang harus dijalankan**, diturunkan dari `requirements.md` (sumber kebutuhan / WHAT) dan `design.md` (sumber keputusan UI-UX / HOW). Tidak ada ide baru di sini; setiap task harus bisa ditelusuri ke ID di kedua dokumen.
+
+Struktur task mengikuti milestone **M0-M9** dari `roadmap.md`. ID task `T-01` s/d `T-31` **tidak berubah** - yang dipindahkan hanya pengelompokan ke milestone, sehingga seluruh riwayatnya tetap dapat dirujuk.
 
 ## Cara Kerja Setiap Task
 
 Setiap task memakai siklus yang sama. Jangan melompat ke task berikutnya sebelum task aktif **Done**.
 
 ```
-1. READ    Baca requirement.md & design.md yang dirujuk task ini
-2. PLAN    Tentukan file yang akan disentuh
-3. IMPLEMENT  Tulis kode
-4. VERIFY  npm run typecheck && npm run lint && npm run test
-5. ADJUST  Kalau VERIFY gagal atau hasil ≠ requirement/design:
-           perbaiki, lalu ulangi VERIFY
-6. DONE    Centang di bawah
+Spec
+  |
+Task
+  |
+Implement
+  |
+Test
+  |
+Verify
+  |
+Evidence
+  |
+Review
+  |
+Commit
 ```
 
 ### Aturan Adjust
 
-- Gagal di VERIFY → **Adjust di task yang sama**, bukan task baru.
-- Hasilnya beda dari `requirement.md` atau `design.md` → **Adjust di task yang sama**, atau koreksi dokumen dulu kalau memang dokumennya yang salah (pakai task `[DOC]`).
-- Kalau satu task butuh lebih dari ~1 sesi kerja, pecah jadi beberapa `TASK-xx` baru — janganuum jadi satu task raksasa.
+- Gagal di VERIFY -> **Adjust di task yang sama**, bukan task baru.
+- Hasilnya beda dari `requirements.md` atau `design.md` -> **Adjust di task yang sama**, atau koreksi dokumen dulu kalau memang dokumennya yang salah (pakai task `[DOC]`).
+- Kalau satu task butuh lebih dari ~1 sesi kerja, pecah jadi beberapa task baru - jangan jadi satu task raksasa.
+- Konflik tidak diselesaikan diam-diam di kode. Buat task `[DOC]`, perbaiki sumber dokumen, baru lanjut.
 
 ### Perintah Verifikasi (standar)
 
@@ -39,73 +50,186 @@ npm run build       # hanya untuk task yang menyentuh konfigurasi/bundling
 
 E2E (`npx playwright test`) hanya untuk task bertanda `[E2E]`.
 
+### Jalur Evidence (wajib per task)
+
+Tiap task harus punya jejak untuk **enam** tahap berikut. Tidak perlu delapan kolom; yang wajib adalah tidak ada tahap yang dilewati tanpa bukti.
+
+| Tahap | Isi | Bukti minimum |
+|---|---|---|
+| **Implementation** | kode selesai ditulis sesuai `requirements.md` + `design.md` yang dirujuk | daftar file tersentuh |
+| **Test** | test otomatis ditulis/ditambahkan | nama test yang dijalankan |
+| **Verification** | `typecheck` + `lint` + `test` (+ `build`/`e2e` bila relevan) hijau | output ringkas perintah |
+| **Evidence** | artefak hasil: capture, log, angka drift, screenshot | path/link artefak |
+| **Review** | hasil dicocokkan balik ke requirement/design yang dirujuk | catatan selisih, atau "selaras" |
+| **Commit** | perubahan disimpan pada branch fitur | pesan commit |
+
+> **NO EVIDENCE, NO DONE.** Task tanpa evidence tidak boleh dicentang **Done**, meskipun test hijau.
+
 ### Checkboxes
 
-Setiap task punya 5 checkbox yang **wajib** dicentang berurutan:
+Setiap task punya 6 checkbox yang **wajib** dicentang berurutan:
 
-- [ ] **Implement** — kode selesai ditulis
-- [ ] **Verify** — typecheck + lint + test hijau
-- [ ] **Adjust** — minimal satu putaran koreksi sudah lewat, atau memang tidak ada yang perlu dikoreksi
-- [ ] **Doc check** —perilaku kode dicek ulang terhadap `requirement.md` + `design.md` yang dirujuk
-- [ ] **Done** — task selesai
+- [ ] **Implement** - kode selesai ditulis
+- [ ] **Test** - test ditulis / diperbarui dan dijalankan
+- [ ] **Verify** - typecheck + lint + test hijau
+- [ ] **Evidence** - artefak hasil disimpan (path dicatat di baris *Evidence* pada task)
+- [ ] **Review** - perilaku dicek ulang terhadap `requirements.md` + `design.md` yang dirujuk
+- [ ] **Done** - task selesai
+
+---
+
+## Gerbang Vertical Slice (M1)
+
+M0 sengaja dibiarkan kecil: **scope fitur kecil**. Yang tidak boleh dikorbankan adalah **reading experience subtitle**. Scope kecil berarti lebih sedikit fitur, bukan subtitle yang lebih kecil.
+
+Rantai yang harus terbukti di M1:
+
+```
+Audio
+  |
+SRT
+  |
+Parse Cue
+  |
+Play Audio
+  |
+Subtitle tampil
+  |
+Subtitle mengikuti audio
+```
+
+Enam klaim yang harus dibuktikan, dengan task yang:
+
+| # | Klaim | Dibuktikan oleh |
+|---|---|---|
+| 1 | audio dapat dimainkan | T-07 `[CORE]` |
+| 2 | SRT dapat dibaca | T-04 `[PARSER]` |
+| 3 | cue dapat diparse | T-04 `[PARSER]` |
+| 4 | cue aktif dapat ditentukan | T-06 `[CORE]` |
+| 5 | subtitle **besar** dapat ditampilkan | T-02 `[TOKENS]`, T-03 `[UI]`, T-15 `[PLAYER]` |
+| 6 | subtitle berubah mengikuti audio | T-06 + T-07 + T-15 |
+
+> **Catatan prioritas.** `design.md` D-01 menyatakan subtitle adalah fokus utama, bukan pelengkap. `requirements.md` §9.2 memberi subtitle stage proporsi vertikal terbesar (~45%) dan `design.md` §8.1 S-01..S-10 mengunci keterbacaannya.
+>
+> Jika terjadi konflik **lebih banyak kontrol terlihat** vs **subtitle mudah dibaca**, yang dikorbankan adalah kontrol, bukan subtitle. Jangan mengecilkan font, jangan perkecil stage, dan jangan menambah baris kontrol di area subtitle demi muat lebih banyak tombol.
+
+Task T-15 ditarik ke depan ke M1 (dari blok E semula) khusus untuk menutup gerbang ini. Transport lengkap `SeekBar`/`RateSelector` tetap M3.
 
 ---
 
 ## Peta Task
 
-| ID | Task | Rujukan | AC | Blok |
+Kolom Milestone menggantikan blok lama A-I dan mengikuti `roadmap.md`.
+
+| ID | Task | Milestone | Rujukan | AC |
 |---|---|---|---|---|
-| T-01 | Scaffold project | req §8.1, §8.8 | — | A |
-| T-02 | Design tokens + tema | des §3.1–3.4 | — | A |
-| T-03 | Primitif UI | des §6.1 | — | A |
-| T-04 | Model `Cue` + parser SRT | req §6.2, §14 | AC-15 | B |
-| T-05 | Parser WebVTT | req §7.3, §14 | AC-15 | B |
-| T-06 | `cue-sync` (binary search + offset) | req §8.2 | AC-01,02,03,04 | B |
-| T-07 | `AudioEngine` (rAF loop) | req §8.2, §8.3 | AC-01,02 | B |
-| T-08 | localStorage wrapper + skema | req §6.3, §8.6 | — | C |
-| T-09 | IndexedDB wrapper file ref | req §6.5, §8.4 | AC-06 | C |
-| T-10 | AppShell + AppBar + NavTabs | des §4.1, §11.1 | — | C |
-| T-11 | LibraryPage + grid + kartu | des §5.1, §5.2 | AC-20 | D |
-| T-12 | ImportDialog (FSA + fallback) | req §4.1, §7.2 | AC-07, AC-15 | D |
-| T-13 | Fingerprinting + relink | req §6.4, §4.1 | AC-11 | D |
-| T-14 | TransportControls + SeekBar | des §4.2, §6.2 | — | E |
-| T-15 | SubtitleStage + Overlay | des §5.3, §8.1, §8.2 | AC-13, AC-19 | E |
-| T-16 | `sync-apply` (offset real-time) | req §8.3 | AC-04 | E |
-| T-17 | CueList + pencarian cue | des §8.3 | — | E |
-| T-18 | OffsetPanel + readout + minitimeline | des §9.1–9.5 | AC-05 | F |
-| T-19 | Bookmark CRUD | req §4.4 | AC-10 | F |
-| T-20 | Progress autosave + ResumePrompt | req §4.4 | AC-09 | F |
-| T-21 | SyncWizard (Guided Sync) | req §4.3 FR-45, des §10 | AC-17 | F |
-| T-22 | Export / import JSON | req §4.1 | AC-14 | G |
-| T-23 | SettingsPage | des §5.6 | — | G |
-| T-24 | PWA: manifest + service worker | req §8.7 | AC-08 | G |
-| T-25 | Toast update + install prompt | req §4.5 | AC-16 | G |
-| T-26 | Pintasan keyboard | req §5.1, des §11.5 | AC-12, AC-18 | G |
-| T-27 | Dock responsif | des §4.2, §4.3, §12.2 | AC-21 | H |
-| T-28 | A11y audit + perbaikan | des §11.1–11.5 | AC-18,19,20 | H |
-| T-29 | Audit warna & motion | des §11.4, §3.5 | — | H |
-| T-30 | E2E Playwright | req §13 | semua | H |
-| T-31 | Checklist pre-ship | des §15 | semua | I |
-
-## Urutan
-
-Blok harus dikerjakan berurutan. Dalam satu blok, kerjakan berurutan juga (T-01 sebelum T-02, dst). Alasannya jelas: T-06 tidak berguna kalau T-04 belum ada model `Cue`.
-
-| Blok | Isi | Syarat keluar blok |
-|---|---|---|
-| A — Fondasi | T-01, T-02, T-03 | `npm run build` hijau, app render, tidak ada error konsol |
-| B | T-04, T-05, T-06, T-07 | `cue-sync` punya unit test hijau, audio + subtitle sinkron manual |
-| C | T-08, T-09, T-10, T-11 | reload mempertahankan library |
-| D | T-12, T-13 | import → relink lolos manual |
-| E | T-14, T-15, T-16, T-17 | playback + subtitle + cue list jalan |
-| F | T-18, T-19, T-20, T-21 | semua fitur M + FR-45 jalan |
-| G | T-22, T-23, T-24, T-25, T-26 | offline penuh + settings + shortcut |
-| H | T-27, T-28, T-29, T-30 | semua AC hijau |
-| I | T-31 | checklist §15 `design.md` tercentang semua |
+| T-01 | Scaffold project | M0 | req §8.1, §8.8 | — |
+| T-02 | Design tokens + tema | M0 | des §3.1-3.4 | — |
+| T-03 | Primitif UI | M0 | des §6.1 | — |
+| T-04 | Model `Cue` + parser SRT | M1 | req §6.2, §14 | AC-15 |
+| T-05 | Parser WebVTT | M1 | req §7.3, §14 | AC-15 |
+| T-06 | `cue-sync` (binary search + offset) | M1 | req §8.2 | AC-01,02,03,04 |
+| T-07 | `AudioEngine` (rAF loop) | M1 | req §8.2, §8.3 | AC-01,02 |
+| T-08 | localStorage wrapper + skema | M4 | req §6.3, §8.6 | — |
+| T-09 | IndexedDB wrapper file ref | M4 | req §6.5, §8.4 | AC-06 |
+| T-10 | AppShell + AppBar + NavTabs | M3 | des §4.1, §11.1 | — |
+| T-11 | LibraryPage + grid + kartu | M4 | des §5.1, §5.2 | AC-20 |
+| T-12 | ImportDialog (FSA + fallback) | M4 | req §4.1, §7.2 | AC-07, AC-15 |
+| T-13 | Fingerprinting + relink | M6 | req §6.4, §4.1 | AC-11 |
+| T-14 | TransportControls + SeekBar | M3 | des §4.2, §6.2 | — |
+| T-15 | SubtitleStage + Overlay | M1 | des §5.3, §8.1, §8.2 | AC-13, AC-19 |
+| T-16 | `sync-apply` (offset real-time) | M2 | req §8.3 | AC-04 |
+| T-17 | CueList + pencarian cue | M3 | des §8.3 | — |
+| T-18 | OffsetPanel + readout + minitimeline | M2 | des §9.1-9.5 | AC-05 |
+| T-19 | Bookmark CRUD | M5 | req §4.4 | AC-10 |
+| T-20 | Progress autosave + ResumePrompt | M5 | req §4.4 | AC-09 |
+| T-21 | SyncWizard (Guided Sync) | M2 | req §4.3 FR-45, des §10 | AC-17 |
+| T-22 | Export / import JSON | M6 | req §4.1 | AC-14 |
+| T-23 | SettingsPage | M3 | des §5.6 | — |
+| T-24 | PWA: manifest + service worker | M7 | req §8.7 | AC-08 |
+| T-25 | Toast update + install prompt | M7 | req §4.5 | AC-16 |
+| T-26 | Pintasan keyboard | M3 | req §5.1, des §11.5 | AC-12, AC-18 |
+| T-27 | Dock responsif | M3 | des §4.2, §4.3, §12.2 | AC-21 |
+| T-28 | A11y audit + perbaikan | M8 | des §11.1-11.5 | AC-18,19,20 |
+| T-29 | Audit warna & motion | M8 | des §11.4, §3.5 | — |
+| T-30 | E2E Playwright | M8 | req §13 | semua |
+| T-31 | Checklist pre-ship | M9 | des §15 | semua |
 
 ---
 
-## Blok A — Fondasi
+## Urutan Milestone
+
+Milestone dikerjakan berurutan M0 -> M9. Dalam satu milestone, kerjakan juga berurutan.
+
+| Milestone | Isi | Syarat keluar milestone |
+|---|---|---|
+| **M0 - Bootstrap & Spec Audit** | T-01, T-02, T-03 | Spec audit selesai tanpa konflik terbuka; baseline `npm run typecheck && npm run lint && npm run build && npm run test` hijau. |
+| **M1 - Audio + SRT Core (vertical slice)** | T-04, T-05, T-06, T-07, T-15 | **Vertical slice terbukti.** Audio + SRT bisa diputar, cue ter-parse, cue aktif ditentukan, subtitle besar tampil dan berubah mengikuti audio. Lihat gate lengkap di bagian "Gerbang Vertical Slice". |
+| **M2 - Synchronization Engine** | T-16, T-18, T-21 | Offset berlaku di frame yang sama dengan perubahan readout; boundary, gap, overlap, dan drift playback panjang punya test. |
+| **M3 - Player UX** | T-10, T-14, T-17, T-23, T-26, T-27 | Transport, cue list, offset panel, pintasan, dan dock responsif jalan; dock 64px<->88px tidak mereset state audio (AC-21). |
+| **M4 - Library & Persistence** | T-08, T-09, T-11, T-12 | Reload dan restart mempertahankan library, metadata, dan referensi file (AC-06, AC-07). |
+| **M5 - Bookmark & Progress** | T-19, T-20 | Bookmark CRUD, autosave progress, resume prompt, dan state completed jalan (AC-09, AC-10). |
+| **M6 - Relink & Backup** | T-13, T-22 | File hilang terdeteksi dan bisa di-relink tanpa kehilangan bookmark/progress/offset; export/import metadata jalan (AC-11, AC-14). |
+| **M7 - PWA & Offline** | T-24, T-25 | Offline penuh tanpa request eksternal; update toast tidak memutus playback (AC-08, AC-16). |
+| **M8 - Verification** | T-28, T-29, T-30 | A11y, kontras, motion, dan E2E hijau; evidence tersimpan untuk AC yang relevan. |
+| **M9 - Ship** | T-31 | Checklist `design.md` §15 tercentang; traceability FR/NFR/AC terverifikasi ulang; release memenuhi Definition of Done `requirements.md` §13. |
+
+> Urutan milestone adalah urutan **belajar/eksekusi**, bukan pengganti task detail. T-15 dipindahkan ke M1 secara sadar untuk menutup gerbang vertical slice; urutan asli blok A-I tetap tercatat di `spec-audit.md` § Riwayat Blok Lama.
+
+---
+
+## M0 - Bootstrap & Spec Audit
+
+**Syarat keluar:** Spec audit selesai tanpa konflik terbuka; baseline `npm run typecheck && npm run lint && npm run build && npm run test` hijau.
+
+M0 memuat dua kelompok: `M0-T01` (audit dokumen) dan bootstrap project `T-01` s/d `T-03`.
+
+### M0-T01 `[DOC]` Spec & Manual Audit
+
+**Rujukan:** `spec-audit.md`, `roadmap.md` M0, `requirements.md` (canonical filenames), `design.md` (catatan versi)
+
+**File:** `requirements.md`, `design.md`, `tasks.md`, `roadmap.md`, `spec-audit.md`, `README.md`
+
+**Implement:** task dokumentasi, **bukan** implementasi aplikasi. Tidak ada source code, tidak ada dependency, tidak ada runtime yang disentuh.
+
+- [x] Baca manual referensi dan catat prinsip yang relevan — `Workflow Vibe Coding - Panduan Praktis v.2.md`, 18 prinsip diekstrak
+- [x] Audit `requirements.md` - kebutuhan, user story, FR/NFR, AC, model data, DoD
+- [x] Audit `design.md` - arsitektur, token, komponen, interaksi, a11y, traceability
+- [x] Audit `tasks.md` - kelengkapan task, referensi silang, jalur evidence
+- [x] Audit `roadmap.md` - keselarasan milestone dengan task
+- [x] Audit traceability `requirements.md` -> `design.md` -> `tasks.md` -> `roadmap.md`
+- [x] Audit source-of-truth - pemisahan spec repo vs app repo
+- [x] Terapkan nama file canonical (`requirements.md`) dan bersihkan seluruh referensi ke nama lama — 0 sisa
+- [x] Perbaiki catatan versi `design.md` yang obsolete — v1.0 -> v1.1
+- [x] Sinkronkan `tasks.md` ke struktur milestone M0-M9 — 31 task, 0 duplikat, 0 omissions
+- [x] Audit link `README.md` — 5/5 resolve
+- [x] Tetapkan batas vertical slice MVP — 6 klaim, di `spec-audit.md` §6
+- [x] Bangun matriks Manual -> Dokumen SDD -> Evidence -> Status (PASS/PARTIAL/GAP/UNCLEAR) di `spec-audit.md` — 18 baris
+- [x] Verifikasi ulang traceability dan catat angka aktual beserta perubahannya — `spec-audit.md` §5.2
+
+**Verify:** pencarian nama file lama = 0 hasil; `design.md` tidak lagi berisi klaim wireframe full-screen; `tasks.md` memakai M0-M9; semua link `README.md` resolve ke file yang ada; tidak ada karakter korup di 6 file.
+
+**Evidence:**
+- [x] Laporan M0 (git state, inventory, temuan per dokumen, matriks manual, angka traceability) — dilaporkan di sesi ini
+- [x] Output perintah verifikasi mentah (jumlah referensi, jumlah FR/NFR/AC, jumlah komponen, jumlah task/checkbox) — 0 legacy ref, 45/15/21, 44 komponen, 32 task, 32 gate group, 228 checkbox, 0 U+FFFD
+- [x] Daftar temuan diklasifikasi PASS / PARTIAL / GAP / UNCLEAR — `spec-audit.md` §3–§4, §10
+
+**Adjust yang mungkin:** temuan yang butuh keputusan produk/arsitektur **dilaporkan, tidak diputuskan sendiri**. Tulis sebagai temuan terbuka di `spec-audit.md` dengan status UNCLEAR, lalu tunggu instruksi.
+
+**Review (doc check):** matriks manual, angka traceability, dan batas MVP sudah dicocokkan ulang dengan isi file. Empat temuan terbuka dicatat di `spec-audit.md` §10 dan **tidak** diputuskan sepihak.
+- [x] Implement
+- [x] Test
+- [x] Verify
+- [x] Evidence
+- [x] Review
+- [x] Done
+
+> **Catatan.** Task ini selesai tanpa version control karena folder spec bukan git repository (lihat `spec-audit.md` §4.11). Mitigasi: baseline keenam file dicadangkan sebelum perubahan pertama dan setiap perubahan diverifikasi lewat diff. Tahap **Commit** pada gate tidak dapat dijalankan untuk milestone ini.
+
+**Rincian M0-T01:** lihat `spec-audit.md` untuk matriks audit manual dan temuan.
+
+---
+
 
 ### T-01 `[SCAFFOLD]` Project skeleton
 
@@ -126,12 +250,15 @@ Blok harus dikerjakan berurutan. Dalam satu blok, kerjakan berurutan juga (T-01 
 
 **Adjust yang mungkin:** Vite PWA plugin butuh `workbox-window`; kalau build gagal karena plugin, tambahkan dependency itu dulu.
 
-**Doc check:** nama folder di §8.8 dan nama file komponen di des §6.1 harus cocok.
+**Review (doc check):** nama folder di §8.8 dan nama file komponen di des §6.1 harus cocok.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ### T-02 `[TOKENS]` Design tokens + tema dark/light
@@ -150,12 +277,15 @@ Blok harus dikerjakan berurutan. Dalam satu blok, kerjakan berurutan juga (T-01 
 
 **Adjust yang mungkin:** kalau Tailwind v4 memakai `@theme`, sesuaikan sintaksnya; jangan sampai token terduplikasi.
 
-**Doc check:** hitung jumlah token — harus cocok dengan des §3. Tidak boleh ada token di `tokens.css` yang tidak ada di design.md.
+**Review (doc check):** hitung jumlah token — harus cocok dengan des §3. Tidak boleh ada token di `tokens.css` yang tidak ada di design.md.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ### T-03 `[UI]` Primitif UI dasar
@@ -172,17 +302,26 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** `Slider` butuh `role="slider"` + `aria-valuetext`; `SeekBar` (T-14) akan membangunNYA di atas primitive ini.
 
-**Doc check:** setiap primitive ada di des §6.1 dengan state dan catatan a11y yang sama.
+**Review (doc check):** setiap primitive ada di des §6.1 dengan state dan catatan a11y yang sama.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ---
 
 ## Blok B — Subtitle sync engine
+
+---
+
+## M1 - Audio + SRT Core (vertical slice)
+
+**Syarat keluar:** **Vertical slice terbukti.** Audio + SRT bisa diputar, cue ter-parse, cue aktif ditentukan, subtitle besar tampil dan berubah mengikuti audio. Lihat gate lengkap di bagian "Gerbang Vertical Slice".
 
 ### T-04 `[PARSER]` Model `Cue` + parser SRT
 
@@ -202,12 +341,15 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** kalau fixture req §14 tidak mencakup suatu kasus, tambahkan kasusnya di test, bukan di parser.
 
-**Doc check:** nama field `Cue` harus identik dengan req §6.2.
+**Review (doc check):** nama field `Cue` harus identik dengan req §6.2.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ### T-05 `[PARSER]` Parser WebVTT
@@ -227,12 +369,15 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** kalau ada perbedaan hasil antara SRT dan VTT untuk input yang setara, itu bug — samakan.
 
-**Doc check:** §7.3 req.
+**Review (doc check):** §7.3 req.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ### T-06 `[CORE]` `cue-sync` — binary search + offset
@@ -251,12 +396,15 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** kalau overlap cue menghasilkan hasil ambigu, tetapkan aturan eksplisit dan tulis di test.
 
-**Doc check:** fungsi ini tidak boleh menyimpan state apa pun.
+**Review (doc check):** fungsi ini tidak boleh menyimpan state apa pun.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ### T-07 `[CORE]` `AudioEngine` — rAF loop
@@ -277,65 +425,157 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** kalau `play()` ditolak, tampilkan pesan sesuai req R-10 — jangan diamkan.
 
-**Doc check:** grep untuk memastikan tidak ada `setInterval` atau `timeupdate` yang dipakai sebagai sumber waktu.
+**Review (doc check):** grep untuk memastikan tidak ada `setInterval` atau `timeupdate` yang dipakai sebagai sumber waktu.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ---
 
 ## Blok C — Persistensi & shell
 
-### T-08 `[STORE]` localStorage wrapper + skema
+### T-15 `[PLAYER]` SubtitleStage + SubtitleOverlay
 
-**Rujukan:** req §6.3 (keys), §8.6, R-09
+**Rujukan:** des §5.3, §8.1 (S-01 s/d S-10), §8.2, §6.2, §9.3 req, AC-13, AC-19, D-13
 
-**File:** `src/lib/storage/local.ts`, `src/lib/storage/schema.ts`, `src/lib/storage/__tests__/*.test.ts`
-
-**Implement:**
-- Skema `LibraryItem`, `Progress`, `Bookmark` persis req §6.1 (termasuk `syncHintDismissed` yang ditambahkan untuk FR-45)
-- Wrapper `get`/`set` dengan `try/catch`
-- **Fallback ke in-memory** saat localStorage tidak tersedia atau penuh (req R-09) — app tidak boleh crash
-- Notifikasi ke user saat storage exception terjadi
-
-**Verify:** `npm run test` — test dengan `localStorage` yang dipalsukan throws.
-
-**Adjust yang mungkin:** Jangan pernah menyimpan `File`/`Blob` di sini (req §8.6).
-
-**Doc check:** daftar key harus persis req §6.3.
-
-- [ ] Implement
-- [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
-- [ ] Done
-
-### T-09 `[IDB]` IndexedDB wrapper untuk file reference
-
-**Rujukan:** req §6.5, §8.4, AC-06, AC-07, D-06
-
-**File:** `src/lib/idb/index.ts`, `src/lib/idb/file-store.ts`, `src/lib/__tests__/file-store.test.ts`
+**File:** `src/components/player/SubtitleStage.tsx`, `SubtitleOverlay.tsx`
 
 **Implement:**
-- Simpan `FileSystemFileHandle` untuk browser yang mendukung FSA
-- Fallback: simpan `Blob` bila FSA tidak tersedia (req AC-07)
-- Store terpisah dari metadata — **tidak** memindahkan seluruh database aplikasi ke IndexedDB
-- Buka DB secara lazy, tangani `onupgradeneeded`
+- Tulis teks cue **imperatif via `textContent`**, bukan lewat state (req §8.3)
+- Semua style dari token `design.md` §3 — tanpa hex literal
+- Maksimal 2 baris + ellipsis (S-02), `text-wrap: balance` (S-08)
+- `min-height: 72px` saat idle supaya stage tidak melompat (D-13)
+- Lebar 90% stage, `pointer-events: none` kecuali click-to-reveal
+- `aria-live="off"` + `aria-hidden="true"` (AC-19)
+- **Tidak boleh** ada `backdrop-filter` (D-07)
+- Tombol "Bacakan subtitle" dengan `aria-live="polite"`
+- `prefers-reduced-motion` tidak boleh mematikan subtitle (req §3.5)
 
-**Verify:** `npm run test` dengan `fake-indexeddb`. Manual: reload, file masih bisa diputar (AC-06).
+**Verify:** `npm run test` + manual: cue terpanjang, artwork paling terang, toggle subtitle saat audio tetap jalan (AC-13).
 
-**Adjust yang mungkin:** di Firefox/Safari, FSA tidak ada — pastikan jalur `Blob` benar-benar dipakai, bukan hanya di-kode.
+**Adjust yang mungkin:** kalau teks terpotong jadi tidak terbaca, pakai click-to-reveal — bukan auto-expand (des §8.4).
 
-**Doc check:** req §6.5.
+**Review (doc check):** req §9.3 dan des §8.1 harus cocok baris per baris.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
+
+---
+
+## M2 - Synchronization Engine
+
+**Syarat keluar:** Offset berlaku di frame yang sama dengan perubahan readout; boundary, gap, overlap, dan drift playback panjang punya test.
+
+### T-16 `[SYNC]` Offset real-time
+
+**Rujukan:** req FR-24 s/d FR-27, AC-04, AC-05, §8.3, des §9
+
+**File:** `src/hooks/useOffset.ts`, `src/lib/offset.ts`
+
+**Implement:**
+- Perubahan offset berlaku **di frame yang sama** dengan perubahan readout (AC-04)
+- `clamp(-5000, 5000)`
+- Offset per item, default dari global setting
+- Reset ke 0
+
+**Verify:** `npm run test` + manual: audio diputar, tekan `+100` berulang, teks harus bergeser seketika.
+
+**Adjust yang mungkin:** jangan pernah menyentuh React state dari dalam rAF loop untuk ini juga.
+
+**Review (doc check):** AC-04, AC-05.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
+
+- [ ] Implement
+- [ ] Test
+- [ ] Verify
+- [ ] Evidence
+- [ ] Review
+- [ ] Done
+
+### T-18 `[OFFSET]` OffsetPanel + readout + mini timeline
+
+**Rujukan:** des §9.1 s/d §9.5, D-17, FR-24 s/d FR-27, AC-04
+
+**File:** `src/components/player/OffsetPanel.tsx`, `OffsetReadout.tsx`, `MiniTimeline.tsx`
+
+**Implement:**
+- Readout selalu 3 desimal, `+` eksplisit untuk positif, `U+2212` untuk negatif — **bukan** `-` ASCII
+- **Dibulatkan ke bawah** (floor), bukan ke terdekat (D-17)
+- `role="status"` + `aria-live="polite"`; warna `--warning` bila `abs > 2000ms`
+- Tombol `[-500] [-100] [0] [+100] [+500]`; `0` disabled saat sudah nol; tahan = repeat tiap 120ms
+- `shift+klik` pada angka → `<input type="number">`
+- Checkbox "Terapkan ke semua item", **default tidak aktif** (FR-26), dengan konfirmasi
+- Mini timeline jendela `±2000ms`, `aria-hidden="true"`, re-render hanya saat offset atau cue berubah
+- Blok cue bergeser **ke kanan** saat offset negatif
+
+**Verify:** `npm run test` (test floor) + manual: tombol-tahan, `shift+klik`, offset ±5 detik.
+
+**Adjust yang mungkin:** mini timeline yang re-render tiap frame akan melumpuhkan — pastikan tidak.
+
+**Review (doc check):** D-17, des §9.2.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
+
+- [ ] Implement
+- [ ] Test
+- [ ] Verify
+- [ ] Evidence
+- [ ] Review
+- [ ] Done
+
+### T-21 `[WIZARD]` Guided Sync Wizard
+
+**Rujukan:** req FR-45, AC-17, des §10 (D-18), §5.5
+
+**File:** `src/components/player/SyncWizard.tsx`, `src/hooks/useSyncWizardTrigger.ts`
+
+**Implement:**
+- Dipicu saat subtitle pertama dilampirkan ke item, **sekali** (`syncHintDismissed`)
+- 3 langkah: pendahuluan → dengarkan 15 detik pertama → sesuaikan offset
+- Langkah 2 memakai **dua tombol** ("Terlalu cepat" / "Terlalu lambat"), bukan slider (D-18)
+- Langkah 3 re-use `OffsetPanel` dari T-18
+- `Esc` = batal, **tanpa** perubahan tersimpan
+- **Tidak boleh** auto-play sebelum user gesture
+- Selesai atau batal → tulis `subtitleOffsetMs` **dan** `syncHintDismissed: true`
+- Total durasi 30–45 detik (AC-17)
+
+**Verify:** `npm run test` + manual: jalankan dari `useState` kosong, cek `syncHintDismissed` ter-set di kedua jalur.
+
+**Adjust yang mungkin:** kalau wizard opened dari `useEffect`, autoplay akan ditolak — pancing lewat klik "Mulai".
+
+**Review (doc check):** req §4.3 FR-45 dan des §10.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
+
+- [ ] Implement
+- [ ] Test
+- [ ] Verify
+- [ ] Evidence
+- [ ] Review
+- [ ] Done
+
+---
+
+## Blok G — Data, settings, PWA, keyboard
+
+---
+
+## M3 - Player UX
+
+**Syarat keluar:** Transport, cue list, offset panel, pintasan, dan dock responsif jalan; dock 64px<->88px tidak mereset state audio (AC-21).
 
 ### T-10 `[SHELL]` AppShell + AppBar + NavTabs
 
@@ -355,12 +595,227 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** kalau `useRoute` manual jadiromat, tambahkan `react-router-dom` — tapi catat di `package.json` alasannya.
 
-**Doc check:** urutan fokus harus mengikuti des §11.2.
+**Review (doc check):** urutan fokus harus mengikuti des §11.2.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
+- [ ] Done
+
+### T-14 `[PLAYER]` TransportControls + SeekBar
+
+**Rujukan:** des §4.2, §6.2 (`SeekBar`), req §8.3, AC-12
+
+**File:** `src/components/player/TransportControls.tsx`, `SeekBar.tsx`, `RateSelector.tsx`, `VolumeControl.tsx`
+
+**Implement:**
+- `SeekBar` dengan `role="slider"`, `aria-valuemin/max/now`, dan `aria-valuetext` **verbal** ("0 menit 42 detik dari 45 menit 13 detik")
+- Lapisan: track → buffered → fill → knob
+- Klik seek; drag kontinu **throttled ke 1 frame**; knob hilang saat tidak hover/drag
+- Posisi **tidak** lewat React state (req §8.3) — pointer menulis langsung ke DOM, sama seperti overlay
+- Tidak ada transisi pada `.fill` (D-03)
+- `RateSelector` 6 opsi, `role="radiogroup"`
+
+**Verify:** `npm run typecheck && npm run test`. Manual: drag tidak boleh "tertinggal dari jarinya".
+
+**Adjust yang mungkin:** `aria-valuetext` harus di-update tanpa memicu render ulang React yang berat.
+
+**Review (doc check):** des §6.2 `SeekBar` Persilaku.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
+
+- [ ] Implement
+- [ ] Test
+- [ ] Verify
+- [ ] Evidence
+- [ ] Review
+- [ ] Done
+
+### T-17 `[PLAYER]` CueList + pencarian cue
+
+**Rujukan:** req FR-28, FR-29, des §8.3, D-16
+
+**File:** `src/components/player/CueList.tsx`, `CueListItem.tsx`
+
+**Implement:**
+- `role="listbox"` + `aria-activedescendant`; panah untuk navigasi
+- Klik cue → lompat ke `cue.startMs` **dengan offset dikoreksi** (des §8.3)
+- Kolom timestamp lebar tetap 56px, `tabular-nums`
+- Cue terlewati tampil `--text-tertiary` (D-15)
+- Pencarian cue dengan `<mark>` untuk hasil cocok
+- Auto-scroll **hanya** saat cue aktif keluar viewport, berhenti begitu user scroll manual (D-16), flag di-reset oleh `scrollend` atau timeout 3 detik
+- Panel ini **tidak** berubah saat offset digeser (des §9.6)
+
+**Verify:** `npm run test` + manual: scroll manual benar-benar menghentikan auto-scroll.
+
+**Adjust yang mungkin:** `aria-activedescendant` tidak boleh memicu auto-scroll (AC-19 terkait).
+
+**Review (doc check):** des §8.3.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
+
+- [ ] Implement
+- [ ] Test
+- [ ] Verify
+- [ ] Evidence
+- [ ] Review
+- [ ] Done
+
+---
+
+## Blok F — Offset panel, bookmark, wizard
+
+### T-23 `[SETTINGS]` SettingsPage
+
+**Rujukan:** des §5.6, D-12, req §4.5
+
+**File:** `src/components/settings/SettingsPage.tsx`, `StorageUsage.tsx`, `ShortcutReference.tsx`
+
+**Implement:**
+- Preferensi: tema, ukuran lompat, pertahankan nada (pitch), tampilkan subtitle, offset subtitle global
+- `StorageUsage` dengan `role="meter"`, kondisi `unknown` / `known` / `critical`
+- Permintaan `navigator.storage.persist()`
+- **Status kapabilitas browser** — `showOpenFilePicker` tersedia atau tidak (D-12), **bukan** dump teknis
+- `ShortcutReference` memakai `<table>`, bukan daftar `div`
+- Tata letak persis des §5.6
+
+**Verify:** `npm run typecheck && npm run test` + manual: light mode di halaman ini juga (bukan hanya Library).
+
+**Adjust yang mungkin:** `navigator.storage.estimate()` tidak ada di semua browser — jangan crash.
+
+**Review (doc check):** des §5.6.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
+
+- [ ] Implement
+- [ ] Test
+- [ ] Verify
+- [ ] Evidence
+- [ ] Review
+- [ ] Done
+
+### T-26 `[KEYS]` Pintasan keyboard
+
+**Rujukan:** req §5.1, AC-12, AC-18, des §11.5, `?`
+
+**File:** `src/hooks/useKeyboardShortcuts.ts`
+
+**Implement:**
+- Seluruh pintasan req §5.1 berlaku
+- Tambah `?` (buka referensi pintasan) dan `Esc` (tutup dialog/wizard) dari des §11.5
+- **Semua single-key shortcut nonaktif saat user mengetik** di `<input>`, `<textarea>`, atau `contenteditable` (AC-18) — ini termasuk label bookmark, pencarian cue, dan input offset
+- `focus ring` tidak di-animate (des §7.2)
+
+**Verify:** `npm run test` — ketik `b` di label bookmark, lalu `?`, lalu `c`. Tidak boleh ada aksi yang terjadi (AC-18).
+
+**Adjust yang mungkin:** `Escape` tetap boleh bekerja walau di input.
+
+**Review (doc check):** req §5.1 dan des §11.5.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
+
+- [ ] Implement
+- [ ] Test
+- [ ] Verify
+- [ ] Evidence
+- [ ] Review
+- [ ] Done
+
+---
+
+## Blok H — Polish & verifikasi akhir
+
+### T-27 `[DOCK]` Dock responsif
+
+**Rujukan:** des §4.2, §4.3, §3.8, §12.2, AC-21, D-09
+
+**File:** `src/components/player/Dock.tsx`, `DockMeta.tsx`, `TransportControls.tsx` (re-use)
+
+**Implement:**
+- Desktop `lg` (≥1024px): 88px, dua baris, seekbar full-width
+- Mobile: 64px, **tanpa** seekbar, ketuk area → Player Sheet
+- Dock **selalu tampil di semua halaman** (req §9.1)
+- Kontrol di dock adalah **alias dari kontrol yang sama** dengan Player — bukan instance baru
+- Transisi 64px → 88px **tidak boleh** mereset posisi, rate, atau volume (AC-21)
+- Cue preview di dock (D-09): 1 baris, `ellipsis`, `pointer-events: none`, disembunyi bila `subtitleVisible === false`, baca dari store yang sama
+
+**Verify:** manual: putar audio di mobile, resize ke desktop, cek posisi/rate/volume tidak berubah (AC-21).
+
+**Adjust yang mungkin:** kalau dock dirender ulang saat breakpoint berubah, state audio ikut hilang — jadikan dock tetap satu instance.
+
+**Review (doc check):** des §4.2, §4.3, §12.2.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
+
+- [ ] Implement
+- [ ] Test
+- [ ] Verify
+- [ ] Evidence
+- [ ] Review
+- [ ] Done
+
+---
+
+## M4 - Library & Persistence
+
+**Syarat keluar:** Reload dan restart mempertahankan library, metadata, dan referensi file (AC-06, AC-07).
+
+### T-08 `[STORE]` localStorage wrapper + skema
+
+**Rujukan:** req §6.3 (keys), §8.6, R-09
+
+**File:** `src/lib/storage/local.ts`, `src/lib/storage/schema.ts`, `src/lib/storage/__tests__/*.test.ts`
+
+**Implement:**
+- Skema `LibraryItem`, `Progress`, `Bookmark` persis req §6.1 (termasuk `syncHintDismissed` yang ditambahkan untuk FR-45)
+- Wrapper `get`/`set` dengan `try/catch`
+- **Fallback ke in-memory** saat localStorage tidak tersedia atau penuh (req R-09) — app tidak boleh crash
+- Notifikasi ke user saat storage exception terjadi
+
+**Verify:** `npm run test` — test dengan `localStorage` yang dipalsukan throws.
+
+**Adjust yang mungkin:** Jangan pernah menyimpan `File`/`Blob` di sini (req §8.6).
+
+**Review (doc check):** daftar key harus persis req §6.3.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
+
+- [ ] Implement
+- [ ] Test
+- [ ] Verify
+- [ ] Evidence
+- [ ] Review
+- [ ] Done
+
+### T-09 `[IDB]` IndexedDB wrapper untuk file reference
+
+**Rujukan:** req §6.5, §8.4, AC-06, AC-07, D-06
+
+**File:** `src/lib/idb/index.ts`, `src/lib/idb/file-store.ts`, `src/lib/__tests__/file-store.test.ts`
+
+**Implement:**
+- Simpan `FileSystemFileHandle` untuk browser yang mendukung FSA
+- Fallback: simpan `Blob` bila FSA tidak tersedia (req AC-07)
+- Store terpisah dari metadata — **tidak** memindahkan seluruh database aplikasi ke IndexedDB
+- Buka DB secara lazy, tangani `onupgradeneeded`
+
+**Verify:** `npm run test` dengan `fake-indexeddb`. Manual: reload, file masih bisa diputar (AC-06).
+
+**Adjust yang mungkin:** di Firefox/Safari, FSA tidak ada — pastikan jalur `Blob` benar-benar dipakai, bukan hanya di-kode.
+
+**Review (doc check):** req §6.5.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
+
+- [ ] Implement
+- [ ] Test
+- [ ] Verify
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ### T-11 `[LIBRARY]` LibraryPage + grid + kartu
@@ -381,12 +836,15 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** error **tidak boleh** mengganti konten yang sudah ada (D-14).
 
-**Doc check:** des §5.1 dan §7.1.
+**Review (doc check):** des §5.1 dan §7.1.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ---
@@ -412,180 +870,22 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** `showOpenFilePicker` butuh user gesture — kalau dipanggil dari `useEffect`, browser akan menolaknya.
 
-**Doc check:** des §5.5 "Kunci perilaku".
+**Review (doc check):** des §5.5 "Kunci perilaku".
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
-- [ ] Done
-
-### T-13 `[RELINK]` Fingerprinting + RelinkDialog
-
-**Rujukan:** req §6.4, §4.1, AC-11, des §5.5 (Relink), D-11
-
-**File:** `src/lib/fingerprint.ts`, `src/components/library/RelinkDialog.tsx`, `src/components/library/MissingFilesBanner.tsx`
-
-**Implement:**
-- Fingerprint `name + size + lastModified` sesuai req §6.4
-- Item yang file-nya hilang ditandai `missing_audio`
-- Banner `role="alert"` muncul kalau jumlah file hilang > 0
-- Dialog selalu menampilkan **apa yang tidak hilang**: bookmark, progress, offset (D-11)
-- Aksi `Lewati` dan `Pasang ulang`
-
-**Verify:** `npm run test` untuk logika fingerprint. Manual: hapus file dari disk, reload, cek banner + dialog.
-
-**Adjust yang mungkin:** kalau user memilih file berbeda yang tidak cocok fingerprint, tanyakan konfirmasi eksplisit.
-
-**Doc check:** AC-11.
-
-- [ ] Implement
-- [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ---
 
-## Blok E — Player
+## M5 - Bookmark & Progress
 
-### T-14 `[PLAYER]` TransportControls + SeekBar
-
-**Rujukan:** des §4.2, §6.2 (`SeekBar`), req §8.3, AC-12
-
-**File:** `src/components/player/TransportControls.tsx`, `SeekBar.tsx`, `RateSelector.tsx`, `VolumeControl.tsx`
-
-**Implement:**
-- `SeekBar` dengan `role="slider"`, `aria-valuemin/max/now`, dan `aria-valuetext` **verbal** ("0 menit 42 detik dari 45 menit 13 detik")
-- Lapisan: track → buffered → fill → knob
-- Klik seek; drag kontinu **throttled ke 1 frame**; knob hilang saat tidak hover/drag
-- Posisi **tidak** lewat React state (req §8.3) — pointer menulis langsung ke DOM, sama seperti overlay
-- Tidak ada transisi pada `.fill` (D-03)
-- `RateSelector` 6 opsi, `role="radiogroup"`
-
-**Verify:** `npm run typecheck && npm run test`. Manual: drag tidak boleh "tertinggal dari jarinya".
-
-**Adjust yang mungkin:** `aria-valuetext` harus di-update tanpa memicu render ulang React yang berat.
-
-**Doc check:** des §6.2 `SeekBar` Persilaku.
-
-- [ ] Implement
-- [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
-- [ ] Done
-
-### T-15 `[PLAYER]` SubtitleStage + SubtitleOverlay
-
-**Rujukan:** des §5.3, §8.1 (S-01 s/d S-10), §8.2, §6.2, §9.3 req, AC-13, AC-19, D-13
-
-**File:** `src/components/player/SubtitleStage.tsx`, `SubtitleOverlay.tsx`
-
-**Implement:**
-- Tulis teks cue **imperatif via `textContent`**, bukan lewat state (req §8.3)
-- Semua style dari token `design.md` §3 — tanpa hex literal
-- Maksimal 2 baris + ellipsis (S-02), `text-wrap: balance` (S-08)
-- `min-height: 72px` saat idle supaya stage tidak melompat (D-13)
-- Lebar 90% stage, `pointer-events: none` kecuali click-to-reveal
-- `aria-live="off"` + `aria-hidden="true"` (AC-19)
-- **Tidak boleh** ada `backdrop-filter` (D-07)
-- Tombol "Bacakan subtitle" dengan `aria-live="polite"`
-- `prefers-reduced-motion` tidak boleh mematikan subtitle (req §3.5)
-
-**Verify:** `npm run test` + manual: cue terpanjang, artwork paling terang, toggle subtitle saat audio tetap jalan (AC-13).
-
-**Adjust yang mungkin:** kalau teks terpotong jadi tidak terbaca, pakai click-to-reveal — bukan auto-expand (des §8.4).
-
-**Doc check:** req §9.3 dan des §8.1 harus cocok baris per baris.
-
-- [ ] Implement
-- [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
-- [ ] Done
-
-### T-16 `[SYNC]` Offset real-time
-
-**Rujukan:** req FR-24 s/d FR-27, AC-04, AC-05, §8.3, des §9
-
-**File:** `src/hooks/useOffset.ts`, `src/lib/offset.ts`
-
-**Implement:**
-- Perubahan offset berlaku **di frame yang sama** dengan perubahan readout (AC-04)
-- `clamp(-5000, 5000)`
-- Offset per item, default dari global setting
-- Reset ke 0
-
-**Verify:** `npm run test` + manual: audio diputar, tekan `+100` berulang, teks harus bergeser seketika.
-
-**Adjust yang mungkin:** jangan pernah menyentuh React state dari dalam rAF loop untuk ini juga.
-
-**Doc check:** AC-04, AC-05.
-
-- [ ] Implement
-- [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
-- [ ] Done
-
-### T-17 `[PLAYER]` CueList + pencarian cue
-
-**Rujukan:** req FR-28, FR-29, des §8.3, D-16
-
-**File:** `src/components/player/CueList.tsx`, `CueListItem.tsx`
-
-**Implement:**
-- `role="listbox"` + `aria-activedescendant`; panah untuk navigasi
-- Klik cue → lompat ke `cue.startMs` **dengan offset dikoreksi** (des §8.3)
-- Kolom timestamp lebar tetap 56px, `tabular-nums`
-- Cue terlewati tampil `--text-tertiary` (D-15)
-- Pencarian cue dengan `<mark>` untuk hasil cocok
-- Auto-scroll **hanya** saat cue aktif keluar viewport, berhenti begitu user scroll manual (D-16), flag di-reset oleh `scrollend` atau timeout 3 detik
-- Panel ini **tidak** berubah saat offset digeser (des §9.6)
-
-**Verify:** `npm run test` + manual: scroll manual benar-benar menghentikan auto-scroll.
-
-**Adjust yang mungkin:** `aria-activedescendant` tidak boleh memicu auto-scroll (AC-19 terkait).
-
-**Doc check:** des §8.3.
-
-- [ ] Implement
-- [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
-- [ ] Done
-
----
-
-## Blok F — Offset panel, bookmark, wizard
-
-### T-18 `[OFFSET]` OffsetPanel + readout + mini timeline
-
-**Rujukan:** des §9.1 s/d §9.5, D-17, FR-24 s/d FR-27, AC-04
-
-**File:** `src/components/player/OffsetPanel.tsx`, `OffsetReadout.tsx`, `MiniTimeline.tsx`
-
-**Implement:**
-- Readout selalu 3 desimal, `+` eksplisit untuk positif, `U+2212` untuk negatif — **bukan** `-` ASCII
-- **Dibulatkan ke bawah** (floor), bukan ke terdekat (D-17)
-- `role="status"` + `aria-live="polite"`; warna `--warning` bila `abs > 2000ms`
-- Tombol `[-500] [-100] [0] [+100] [+500]`; `0` disabled saat sudah nol; tahan = repeat tiap 120ms
-- `shift+klik` pada angka → `<input type="number">`
-- Checkbox "Terapkan ke semua item", **default tidak aktif** (FR-26), dengan konfirmasi
-- Mini timeline jendela `±2000ms`, `aria-hidden="true"`, re-render hanya saat offset atau cue berubah
-- Blok cue bergeser **ke kanan** saat offset negatif
-
-**Verify:** `npm run test` (test floor) + manual: tombol-tahan, `shift+klik`, offset ±5 detik.
-
-**Adjust yang mungkin:** mini timeline yang re-render tiap frame akan melumpuhkan — pastikan tidak.
-
-**Doc check:** D-17, des §9.2.
-
-- [ ] Implement
-- [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
-- [ ] Done
+**Syarat keluar:** Bookmark CRUD, autosave progress, resume prompt, dan state completed jalan (AC-09, AC-10).
 
 ### T-19 `[BOOKMARK]` Bookmark CRUD
 
@@ -602,12 +902,15 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** label bookmark adalah `<input>` — ini yang memicu AC-18, jadi pastikan T-26 proudly mengabaikannya.
 
-**Doc check:** AC-10.
+**Review (doc check):** AC-10.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ### T-20 `[PROGRESS]` Autosave progress + ResumePrompt
@@ -626,45 +929,54 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** throttle autosave — jangan tulis ke localStorage tiap frame.
 
-**Doc check:** AC-09.
+**Review (doc check):** AC-09.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
-- [ ] Done
-
-### T-21 `[WIZARD]` Guided Sync Wizard
-
-**Rujukan:** req FR-45, AC-17, des §10 (D-18), §5.5
-
-**File:** `src/components/player/SyncWizard.tsx`, `src/hooks/useSyncWizardTrigger.ts`
-
-**Implement:**
-- Dipicu saat subtitle pertama dilampirkan ke item, **sekali** (`syncHintDismissed`)
-- 3 langkah: pendahuluan → dengarkan 15 detik pertama → sesuaikan offset
-- Langkah 2 memakai **dua tombol** ("Terlalu cepat" / "Terlalu lambat"), bukan slider (D-18)
-- Langkah 3 re-use `OffsetPanel` dari T-18
-- `Esc` = batal, **tanpa** perubahan tersimpan
-- **Tidak boleh** auto-play sebelum user gesture
-- Selesai atau batal → tulis `subtitleOffsetMs` **dan** `syncHintDismissed: true`
-- Total durasi 30–45 detik (AC-17)
-
-**Verify:** `npm run test` + manual: jalankan dari `useState` kosong, cek `syncHintDismissed` ter-set di kedua jalur.
-
-**Adjust yang mungkin:** kalau wizard opened dari `useEffect`, autoplay akan ditolak — pancing lewat klik "Mulai".
-
-**Doc check:** req §4.3 FR-45 dan des §10.
-
-- [ ] Implement
-- [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ---
 
-## Blok G — Data, settings, PWA, keyboard
+## M6 - Relink & Backup
+
+**Syarat keluar:** File hilang terdeteksi dan bisa di-relink tanpa kehilangan bookmark/progress/offset; export/import metadata jalan (AC-11, AC-14).
+
+### T-13 `[RELINK]` Fingerprinting + RelinkDialog
+
+**Rujukan:** req §6.4, §4.1, AC-11, des §5.5 (Relink), D-11
+
+**File:** `src/lib/fingerprint.ts`, `src/components/library/RelinkDialog.tsx`, `src/components/library/MissingFilesBanner.tsx`
+
+**Implement:**
+- Fingerprint `name + size + lastModified` sesuai req §6.4
+- Item yang file-nya hilang ditandai `missing_audio`
+- Banner `role="alert"` muncul kalau jumlah file hilang > 0
+- Dialog selalu menampilkan **apa yang tidak hilang**: bookmark, progress, offset (D-11)
+- Aksi `Lewati` dan `Pasang ulang`
+
+**Verify:** `npm run test` untuk logika fingerprint. Manual: hapus file dari disk, reload, cek banner + dialog.
+
+**Adjust yang mungkin:** kalau user memilih file berbeda yang tidak cocok fingerprint, tanyakan konfirmasi eksplisit.
+
+**Review (doc check):** AC-11.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
+
+- [ ] Implement
+- [ ] Test
+- [ ] Verify
+- [ ] Evidence
+- [ ] Review
+- [ ] Done
+
+---
+
+## Blok E — Player
 
 ### T-22 `[EXPORT]` Export / import JSON
 
@@ -681,39 +993,22 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** versi skema wajib ada di dalam file export supaya import versi lama bisa ditolak dengan pesan jelas.
 
-**Doc check:** AC-14.
+**Review (doc check):** AC-14.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
-### T-23 `[SETTINGS]` SettingsPage
+---
 
-**Rujukan:** des §5.6, D-12, req §4.5
+## M7 - PWA & Offline
 
-**File:** `src/components/settings/SettingsPage.tsx`, `StorageUsage.tsx`, `ShortcutReference.tsx`
-
-**Implement:**
-- Preferensi: tema, ukuran lompat, pertahankan nada (pitch), tampilkan subtitle, offset subtitle global
-- `StorageUsage` dengan `role="meter"`, kondisi `unknown` / `known` / `critical`
-- Permintaan `navigator.storage.persist()`
-- **Status kapabilitas browser** — `showOpenFilePicker` tersedia atau tidak (D-12), **bukan** dump teknis
-- `ShortcutReference` memakai `<table>`, bukan daftar `div`
-- Tata letak persis des §5.6
-
-**Verify:** `npm run typecheck && npm run test` + manual: light mode di halaman ini juga (bukan hanya Library).
-
-**Adjust yang mungkin:** `navigator.storage.estimate()` tidak ada di semua browser — jangan crash.
-
-**Doc check:** des §5.6.
-
-- [ ] Implement
-- [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
-- [ ] Done
+**Syarat keluar:** Offline penuh tanpa request eksternal; update toast tidak memutus playback (AC-08, AC-16).
 
 ### T-24 `[PWA]` Manifest + service worker
 
@@ -731,12 +1026,15 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** kalau ada aset yang gagal di-cache, tambahkan ke `globPatterns`.
 
-**Doc check:** AC-08, D-06.
+**Review (doc check):** AC-08, D-06.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ### T-25 `[PWA]` Toast update + install prompt
@@ -755,67 +1053,22 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** `beforeinstallprompt` hanya sekali per pengguna — cache event-nya.
 
-**Doc check:** des §7.3.
+**Review (doc check):** des §7.3.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Done
-- [ ] Doc check
-
-### T-26 `[KEYS]` Pintasan keyboard
-
-**Rujukan:** req §5.1, AC-12, AC-18, des §11.5, `?`
-
-**File:** `src/hooks/useKeyboardShortcuts.ts`
-
-**Implement:**
-- Seluruh pintasan req §5.1 berlaku
-- Tambah `?` (buka referensi pintasan) dan `Esc` (tutup dialog/wizard) dari des §11.5
-- **Semua single-key shortcut nonaktif saat user mengetik** di `<input>`, `<textarea>`, atau `contenteditable` (AC-18) — ini termasuk label bookmark, pencarian cue, dan input offset
-- `focus ring` tidak di-animate (des §7.2)
-
-**Verify:** `npm run test` — ketik `b` di label bookmark, lalu `?`, lalu `c`. Tidak boleh ada aksi yang terjadi (AC-18).
-
-**Adjust yang mungkin:** `Escape` tetap boleh bekerja walau di input.
-
-**Doc check:** req §5.1 dan des §11.5.
-
-- [ ] Implement
-- [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ---
 
-## Blok H — Polish & verifikasi akhir
+## M8 - Verification
 
-### T-27 `[DOCK]` Dock responsif
-
-**Rujukan:** des §4.2, §4.3, §3.8, §12.2, AC-21, D-09
-
-**File:** `src/components/player/Dock.tsx`, `DockMeta.tsx`, `TransportControls.tsx` (re-use)
-
-**Implement:**
-- Desktop `lg` (≥1024px): 88px, dua baris, seekbar full-width
-- Mobile: 64px, **tanpa** seekbar, ketuk area → Player Sheet
-- Dock **selalu tampil di semua halaman** (req §9.1)
-- Kontrol di dock adalah **alias dari kontrol yang sama** dengan Player — bukan instance baru
-- Transisi 64px → 88px **tidak boleh** mereset posisi, rate, atau volume (AC-21)
-- Cue preview di dock (D-09): 1 baris, `ellipsis`, `pointer-events: none`, disembunyi bila `subtitleVisible === false`, baca dari store yang sama
-
-**Verify:** manual: putar audio di mobile, resize ke desktop, cek posisi/rate/volume tidak berubah (AC-21).
-
-**Adjust yang mungkin:** kalau dock dirender ulang saat breakpoint berubah, state audio ikut hilang — jadikan dock tetap satu instance.
-
-**Doc check:** des §4.2, §4.3, §12.2.
-
-- [ ] Implement
-- [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
-- [ ] Done
+**Syarat keluar:** A11y, kontras, motion, dan E2E hijau; evidence tersimpan untuk AC yang relevan.
 
 ### T-28 `[A11Y]` Audit aksesibilitas
 
@@ -835,12 +1088,15 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** perbaiki setiap temuan satu per satu, jangan menumpuk.
 
-**Doc check:** des §15.3.
+**Review (doc check):** des §15.3.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ### T-29 `[THEME]` Audit kontras & motion
@@ -861,12 +1117,15 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** kalau sebuah rasio gagal, ubah **token** — jangan menambal per komponen.
 
-**Doc check:** des §11.4.
+**Review (doc check):** des §11.4.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ### T-30 `[E2E]` Playwright end-to-end
@@ -888,17 +1147,26 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** service worker bikin test flaky — matikan SW untuk test yang tidak perlu, dan buat test khusus untuknya.
 
-**Doc check:** req §13.
+**Review (doc check):** req §13.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ---
 
 ## Blok I — Penutupan
+
+---
+
+## M9 - Ship
+
+**Syarat keluar:** Checklist `design.md` §15 tercentang; traceability FR/NFR/AC terverifikasi ulang; release memenuhi Definition of Done `requirements.md` §13.
 
 ### T-31 `[SHIP]` Checklist pre-ship + Definition of Done
 
@@ -925,12 +1193,15 @@ Label tombol mengikuti tabel des §13.4. Focus ring mengikuti des §11.1.
 
 **Adjust yang mungkin:** kalau ada butir yang gagal, **buat task baru** untuk memperbaikinya — jangan centang manual.
 
-**Doc check:** `requirement.md` dan `design.md` tetap konsisten satu sama lain.
+**Review (doc check):** `requirements.md` dan `design.md` tetap konsisten satu sama lain.
+
+**Evidence:** _path / link artefak + ringkasan hasil verifikasi_
 
 - [ ] Implement
+- [ ] Test
 - [ ] Verify
-- [ ] Adjust
-- [ ] Doc check
+- [ ] Evidence
+- [ ] Review
 - [ ] Done
 
 ---

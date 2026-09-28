@@ -6,12 +6,14 @@ status: draft
 
 # Design — Audio Subtitle Player (ASP)
 
-**Versi dokumen:** 1.0
+**Versi dokumen:** 1.1
 **Tanggal:** 2026-09-29
 **Status:** Draft — menunggu review
-**Dokumen induk:** [`requirement.md`](./requirement.md) — dokumen ini mengimplementasikan, tidak menggantikan
+**Dokumen induk:** [`requirements.md`](./requirements.md) — dokumen ini mengimplementasikan, tidak menggantikan
 
-> **Catatan versi.** Wireframe di `requirement.md` §9 masih menggambarkan player full-screen. Dokumen ini memakai layout **dock bawah + panel subtitle besar** dan menjadi sumber kebenaran tunggal untuk seluruh keputusan visual. traceability ke requirement dijaga lewat ID `D-xx` yang dipetakan di §14.
+> **Catatan versi (v1.1).** `requirements.md` §9 **sudah** memakai layout **dock bawah + panel subtitle besar** dengan Player *subtitle-first*. Dokumen ini tidak lagi menimpa wireframe requirement. Seluruh keputusan visual tetap dipegang `design.md` sebagai sumber kebenaran tunggal, dan traceability ke requirement dijaga lewat ID `D-xx` yang dipetakan di §14.
+>
+> Division of authority: `requirements.md` = **WHAT** (kebutuhan & acceptance criteria). `design.md` = **HOW** (keputusan visual, token, komponen, interaksi).
 
 ---
 
@@ -761,7 +763,7 @@ Muncul sekali saat membuka item yang punya progress dan `completed === false`. T
 
 ```
 Perilaku
-  - Menerima teks cue yang SUDAH aktif dari rAF loop (requirement.md §8.2)
+  - Menerima teks cue yang SUDAH aktif dari rAF loop (requirements.md §8.2)
   - Tulis via textContent imperatif, bukan lewat state
   - Maksimal 2 baris; baris ke-3 dipotong dengan ellipsis
   - Lebar maksimum 90% dari stage
@@ -809,7 +811,7 @@ Perilaku
   - Klik pada track     : seek ke posisi klik
   - Drag                : seek kontinu, throttled ke 1 frame
   - Keyboard            : ←/→ 5 detik, Shift+←/→ 1 detik, Home/End, PageUp/PageDown 10%
-  - Update posisi       : TIDAK lewat React state (requirement.md §8.3)
+  - Update posisi       : TIDAK lewat React state (requirements.md §8.3)
   - Hover               : knob muncul, track menebal 4px → 6px, 120ms
   - During playback     : tidak ada transisi pada .fill (D-03)
 ```
@@ -1212,9 +1214,9 @@ Aturannya:
 | `--success` / `--bg-surface` | 9.2:1 | 4.6:1 | AA |
 | `--subtitle-fg` / `--subtitle-bg` | 15.8:1 | 15.8:1 | AAA |
 
-### 11.5 Keyboard — Titik Konflik dengan requirement.md §5.1
+### 11.5 Keyboard — Titik Konflik dengan requirements.md §5.1
 
-Semua pintasan di §5.1 `requirement.md` berlaku. Yang ditambahkan oleh dokumen ini:
+Semua pintasan di requirements.md §5.1 berlaku. Yang ditambahkan oleh dokumen ini:
 
 | Key | Aksi | Alasan |
 |---|---|---|
@@ -1368,7 +1370,7 @@ Empty    : [Kondisi]. [Aksi utama].
 
 ### 14.3 Acceptance Criteria
 
-AC-01 s/d AC-16 didefinisikan di `requirement.md` §10. AC-17 s/d AC-21 adalah tambahan yang lahir dari dokumen desain ini dan **sudah ditambahkan** ke `requirement.md` §10 agar tetap menjadi sumber tunggal.
+AC-01 s/d AC-16 didefinisikan di `requirements.md` §10. AC-17 s/d AC-21 adalah tambahan yang lahir dari dokumen desain ini dan **sudah ditambahkan** ke `requirements.md` §10 agar tetap menjadi sumber tunggal.
 
 | ID | Kriteria | Sumber |
 |---|---|---|

@@ -9,7 +9,7 @@ status: draft
 **Versi dokumen:** 1.0
 **Tanggal:** 2026-09-29
 **Status:** Draft — menunggu review
-**Target path:** `C:\Users\mubarok's service\Documents\audio-sub-player\requirement.md`
+**Target path:** `C:\Users\mubarok's service\Documents\audio-sub-player\requirements.md`
 
 ---
 
@@ -512,7 +512,7 @@ Sesuai pilihan produk, database aplikasi memakai `localStorage` dengan JSON. Bat
 
 ```
 audio-sub-player/
-├── requirement.md
+├── requirements.md
 ├── package.json
 ├── vite.config.ts
 ├── index.html
