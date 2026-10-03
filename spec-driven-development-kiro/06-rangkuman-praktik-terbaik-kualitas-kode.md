@@ -287,7 +287,7 @@ Pemeliharaan berkala
 - [ ] Memahami README harus diverifikasi terhadap codebase.
 - [ ] Mengetahui risiko halusinasi perintah instalasi oleh AI.
 
-Pada sesi dokumentasi ini halaman kuis sudah dibaca sampai aturan lengkapnya. Tidak ada hasil submit baru yang dicatat, sehingga kuis sebaiknya dikerjakan dengan pemahaman dari checklist di atas dan hasilnya dicatat setelah selesai.
+Pengguna mengonfirmasi bahwa kuis Modul 5 sudah dikerjakan sebelumnya. Sesuai permintaan, kuis tidak diulang dan tidak ada submit baru yang dilakukan. Skor detail tidak tersedia pada sesi dokumentasi ini, sehingga catatan hasil yang aman adalah: **sudah dikerjakan — tidak diulang**.
 
 ---
 
