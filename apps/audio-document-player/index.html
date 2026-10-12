@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="Pemutar audio offline dengan pembaca dokumen Markdown, SRT, dan TXT.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Dengar & Baca</title>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand-mark" aria-hidden="true">▶</div>
+      <div><p class="eyebrow">PEMUTAR OFFLINE</p><h1>Dengar <span>&</span> Baca</h1></div>
+      <span id="network-status" class="status-pill">Memeriksa…</span>
+    </header>
+
+    <section class="panel player-panel" aria-labelledby="player-title">
+      <div class="section-heading"><div><p class="eyebrow">01 / AUDIO</p><h2 id="player-title">Pemutar audio</h2></div><span class="icon-badge" aria-hidden="true">♫</span></div>
+      <label class="file-picker" for="audio-file"><span class="picker-icon" aria-hidden="true">＋</span><span><strong>Pilih berkas audio</strong><small>Audio yang tersimpan di perangkatmu</small></span><span class="picker-arrow" aria-hidden="true">↗</span></label>
+      <input id="audio-file" class="visually-hidden" type="file" accept="audio/*">
+      <p id="audio-name" class="file-name">Belum ada audio dipilih</p>
+      <audio id="audio" preload="metadata"></audio>
+      <div class="transport">
+        <button id="play-toggle" class="play-button" type="button" disabled aria-label="Putar audio"><span id="play-symbol" aria-hidden="true">▶</span></button>
+        <div class="timeline">
+          <label class="visually-hidden" for="seek">Posisi audio</label>
+          <input id="seek" type="range" min="0" max="1000" value="0" step="1" disabled>
+          <div class="time-row"><span id="current-time">00:00</span><span id="duration">00:00</span></div>
+        </div>
+      </div>
+      <p id="audio-message" class="helper" role="status">Pilih audio untuk mulai mendengarkan.</p>
+    </section>
+
+    <section class="panel document-panel" aria-labelledby="document-title">
+      <div class="section-heading"><div><p class="eyebrow">02 / DOKUMEN</p><h2 id="document-title">Pembaca dokumen</h2></div><span class="format-badge">MD · SRT · TXT</span></div>
+      <label class="file-picker" for="document-file"><span class="picker-icon" aria-hidden="true">＋</span><span><strong>Pilih dokumen</strong><small>Markdown, subtitle SRT, atau teks biasa</small></span><span class="picker-arrow" aria-hidden="true">↗</span></label>
+      <input id="document-file" class="visually-hidden" type="file" accept=".md,.markdown,.srt,.txt,text/plain,text/markdown,application/x-subrip">
+      <div class="document-meta"><span id="document-name">Belum ada dokumen dipilih</span><span id="document-format" class="format-badge">—</span></div>
+      <div id="document-content" class="document-content" tabindex="0" aria-live="polite"><div class="empty-state"><span aria-hidden="true">▤</span><h3>Ruang bacamu</h3><p>Pilih berkas MD, SRT, atau TXT. Isinya diproses di perangkat, bukan diunggah.</p></div></div>
+      <p id="document-message" class="helper" role="status">Berkas dokumen perlu dipilih kembali setelah halaman dimuat ulang.</p>
+    </section>
+
+    <footer><span>Privat secara lokal · Tanpa akun</span><span id="app-version">MVP 1.0</span></footer>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </main>
+  <script src="./app.js" defer></script>
+</body>
+</html>
