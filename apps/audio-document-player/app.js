@@ -112,54 +112,6 @@
     return value.replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   }
 
-  function renderInline(text) {
-    let safe = escapeHtml(text);
-    safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    safe = safe.replace(/__(.+?)__/g, '<strong>$1</strong>');
-    safe = safe.replace(/\*(.+?)\*/g, '<em>$1</em>');
-    safe = safe.replace(/_(.+?)_/g, '<em>$1</em>');
-    safe = safe.replace(/`([^`]+)`/g, '<code>$1</code>');
-    return safe;
-  }
-
-  function renderMarkdown(text) {
-    const lines = text.replace(/\r\n?/g, '\n').split('\n');
-    const out = [];
-    let paragraph = [];
-    let listType = null;
-    let inCode = false;
-    let codeLines = [];
-    const flushParagraph = () => {
-      if (paragraph.length) { out.push('<p>' + renderInline(paragraph.join(' ')) + '</p>'); paragraph = []; }
-    };
-    const closeList = () => { if (listType) { out.push('</' + listType + '>'); listType = null; } };
-    for (const line of lines) {
-      if (/^\s*```/.test(line)) {
-        flushParagraph(); closeList();
-        if (inCode) { out.push('<pre><code>' + escapeHtml(codeLines.join('\n')) + '</code></pre>'); codeLines = []; inCode = false; }
-        else inCode = true;
-        continue;
-      }
-      if (inCode) { codeLines.push(line); continue; }
-      if (!line.trim()) { flushParagraph(); closeList(); continue; }
-      const heading = line.match(/^\s*(#{1,3})\s+(.+)$/);
-      if (heading) { flushParagraph(); closeList(); const level = heading[1].length; out.push('<h' + level + '>' + renderInline(heading[2]) + '</h' + level + '>'); continue; }
-      if (/^\s*>\s?/.test(line)) { flushParagraph(); closeList(); out.push('<blockquote>' + renderInline(line.replace(/^\s*>\s?/, '')) + '</blockquote>'); continue; }
-      const list = line.match(/^\s*(?:[-*+]\s+|\d+[.)]\s+)(.+)$/);
-      if (list) {
-        flushParagraph();
-        const type = /^\s*\d/.test(line) ? 'ol' : 'ul';
-        if (listType !== type) { closeList(); out.push('<' + type + '>'); listType = type; }
-        out.push('<li>' + renderInline(list[1]) + '</li>');
-        continue;
-      }
-      closeList(); paragraph.push(line.trim());
-    }
-    flushParagraph(); closeList();
-    if (inCode) out.push('<pre><code>' + escapeHtml(codeLines.join('\n')) + '</code></pre>');
-    return out.join('\n') || '<p>(Dokumen kosong)</p>';
-  }
-
   function parseSrt(text) {
     const normalized = text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').trim();
     if (!normalized) return { cues: [], malformed: 0 };
@@ -211,7 +163,7 @@
     try {
       const text = await file.text();
       if (ext === 'srt') documentContent.innerHTML = renderSrt(text);
-      else if (ext === 'md' || ext === 'markdown') documentContent.innerHTML = renderMarkdown(text);
+      else if (ext === 'md' || ext === 'markdown') documentContent.innerHTML = MarkdownRenderer.renderMarkdown(text);
       else documentContent.innerHTML = '<div class="raw-text">' + escapeHtml(text) + '</div>';
       if (!text.length) documentMessage.textContent = 'Berkas kosong.';
       else if (ext === 'srt') {

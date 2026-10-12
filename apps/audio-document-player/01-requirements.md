@@ -17,7 +17,7 @@ A person using an Android phone to listen to lectures or other audio and read ac
 - FR-04: Tapping or keyboard-operating the seek bar seeks to that relative position immediately when media metadata is available.
 - FR-05: Seek bar supports accessible labels and keyboard input.
 - FR-06: Choose one local document with extension .md, .srt, or .txt.
-- FR-07: Render Markdown as readable content, with raw-text fallback and no unsafe HTML injection.
+- FR-07: Render common Markdown formatting (headings, paragraphs, bold, italic, strikethrough, lists, blockquotes, links, inline/fenced code, horizontal rules, and pipe tables) as readable content; escape raw HTML and block unsafe link protocols.
 - FR-08: Display SRT cues as timestamped blocks; malformed entries must not crash the app and must be reported clearly.
 - FR-09: Display TXT as readable plain text while preserving line breaks.
 - FR-10: Remember playback position for the current audio during the current browser session; do not upload files.
@@ -45,7 +45,7 @@ A person using an Android phone to listen to lectures or other audio and read ac
 - AC-04: Time display updates during playback and after seeking.
 - AC-05: TXT opens with readable line breaks.
 - AC-06: SRT displays valid cues with timestamps and text; malformed input shows a non-fatal warning/fallback.
-- AC-07: Markdown headings, paragraphs, lists, emphasis, and inline code render safely; raw HTML is not executed.
+- AC-07: Markdown headings, paragraphs, lists, emphasis, strikethrough, links, code, horizontal rules, and pipe tables render safely; raw HTML is not executed and unsafe link protocols are blocked. Markdown images do not trigger remote requests.
 - AC-08: A rejected file type produces a clear message without breaking the current screen.
 - AC-09: App shell is cacheable for offline reopen after initial successful load; network failure does not erase app UI.
 - AC-10: No backend or user-file upload exists in the implementation.

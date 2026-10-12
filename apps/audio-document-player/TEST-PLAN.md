@@ -1,8 +1,8 @@
 # Manual Acceptance Test Plan
 
-Status: planned; not yet executed in a real browser/device.
+Status: automated renderer tests added; browser/device tests remain planned and not yet executed.
 
-## Audio
+## Automated Markdown renderer tests\n\nRun from the repository root: `node --test apps/audio-document-player/tests/markdown.test.js`. Expected: all renderer tests pass for emphasis, code, blocks, tables, raw-HTML escaping, and unsafe links. Record the actual command result before marking this gate PASS.\n\n## Audio
 - [ ] Select supported MP3 or WAV file; verify file name and duration.
 - [ ] Play, pause, resume, and replay after reaching end.
 - [ ] Tap approximately 25%, 50%, and 90% on seek slider; verify current time changes immediately to the expected position (±1 second).
