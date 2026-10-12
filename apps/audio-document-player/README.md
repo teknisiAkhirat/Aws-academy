@@ -24,10 +24,10 @@ Lalu buka alamat localhost yang ditampilkan. Folder ini tidak membutuhkan proses
 - Format/codec audio bergantung pada dukungan browser/perangkat.
 - Pemutaran background bisa dibatasi oleh browser atau sistem operasi.
 - MVP tidak menyinkronkan subtitle dengan audio; baris SRT tidak dapat diketuk untuk seek.
-- Renderer Markdown mendukung subset umum (heading level 1–3, paragraf, list, blockquote, code, bold, italic). HTML mentah tidak dieksekusi.
+- Renderer Markdown mendukung heading level 1–6, paragraf, bold, italic, coret, tautan aman, list, blockquote, garis pemisah, blok kode, kode sebaris, dan tabel pipe. HTML mentah di-escape; gambar Markdown ditampilkan sebagai teks alt agar tidak memuat gambar jarak jauh.
 - Service worker hanya tersedia pada secure context (HTTPS/localhost).
 
-## Status verifikasi
+## Uji renderer Markdown\n\nDengan Node.js 18 atau lebih baru, jalankan dari root repository:\n\n```sh\nnode --test apps/audio-document-player/tests/markdown.test.js\n```\n\n## Status verifikasi
 - Implementasi dan source inspection: tersedia di branch fitur.
 - Automated tests, browser interaction, Android playback, installability, dan offline runtime: **UNCONFIRMED** sampai benar-benar dijalankan dan hasilnya dicatat.
 - Jangan menyatakan production-ready sebelum gate runtime selesai.
