@@ -14,10 +14,57 @@
   const documentName = $('document-name');
   const documentFormat = $('document-format');
   const documentContent = $('document-content');
+  const documentPanel = $('document-panel');
+  const fullscreenToggle = $('reader-fullscreen-toggle');
   const documentMessage = $('document-message');
   const networkStatus = $('network-status');
   let audioUrl = null;
   let toastTimer = null;
+
+  function isReaderFullscreen() {
+    return document.fullscreenElement === documentPanel || documentPanel.classList.contains('reader-fullscreen-fallback');
+  }
+
+  function syncFullscreenButton() {
+    const active = isReaderFullscreen();
+    fullscreenToggle.setAttribute('aria-pressed', String(active));
+    fullscreenToggle.title = active ? 'Keluar dari layar penuh' : 'Buka pembaca layar penuh';
+    fullscreenToggle.querySelector('.fullscreen-label').textContent = active ? 'Keluar layar penuh' : 'Layar penuh';
+    fullscreenToggle.querySelector('[aria-hidden="true"]').textContent = active ? '⤢' : '⛶';
+  }
+
+  fullscreenToggle.addEventListener('click', async () => {
+    if (documentPanel.classList.contains('reader-fullscreen-fallback')) {
+      documentPanel.classList.remove('reader-fullscreen-fallback');
+      document.body.classList.remove('reader-fallback-active');
+      syncFullscreenButton();
+      return;
+    }
+    if (document.fullscreenElement === documentPanel) {
+      try { await document.exitFullscreen(); } catch { /* CSS fallback below keeps an exit control available. */ }
+      syncFullscreenButton();
+      return;
+    }
+    if (documentPanel.requestFullscreen) {
+      try {
+        await documentPanel.requestFullscreen();
+        syncFullscreenButton();
+        return;
+      } catch { /* Some mobile browsers do not permit element fullscreen. */ }
+    }
+    documentPanel.classList.add('reader-fullscreen-fallback');
+    document.body.classList.add('reader-fallback-active');
+    syncFullscreenButton();
+  });
+
+  document.addEventListener('fullscreenchange', syncFullscreenButton);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && documentPanel.classList.contains('reader-fullscreen-fallback')) {
+      documentPanel.classList.remove('reader-fullscreen-fallback');
+      document.body.classList.remove('reader-fallback-active');
+      syncFullscreenButton();
+    }
+  });
 
   function formatTime(seconds) {
     if (!Number.isFinite(seconds) || seconds < 0) return '00:00';

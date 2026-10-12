@@ -34,8 +34,8 @@
       <p id="audio-message" class="helper" role="status">Pilih audio untuk mulai mendengarkan.</p>
     </section>
 
-    <section class="panel document-panel" aria-labelledby="document-title">
-      <div class="section-heading"><div><p class="eyebrow">02 / DOKUMEN</p><h2 id="document-title">Pembaca dokumen</h2></div><span class="format-badge">MD · SRT · TXT</span></div>
+    <section id="document-panel" class="panel document-panel" aria-labelledby="document-title">
+      <div class="section-heading"><div><p class="eyebrow">02 / DOKUMEN</p><h2 id="document-title">Pembaca dokumen</h2></div><div class="document-heading-actions"><span class="format-badge">MD · SRT · TXT</span><button id="reader-fullscreen-toggle" class="fullscreen-toggle" type="button" aria-controls="document-content" aria-pressed="false" title="Buka pembaca layar penuh"><span aria-hidden="true">⛶</span><span class="fullscreen-label">Layar penuh</span></button></div></div>
       <label class="file-picker" for="document-file"><span class="picker-icon" aria-hidden="true">＋</span><span><strong>Pilih dokumen</strong><small>Markdown, subtitle SRT, atau teks biasa</small></span><span class="picker-arrow" aria-hidden="true">↗</span></label>
       <input id="document-file" class="visually-hidden" type="file" accept=".md,.markdown,.srt,.txt,text/plain,text/markdown,application/x-subrip">
       <div class="document-meta"><span id="document-name">Belum ada dokumen dipilih</span><span id="document-format" class="format-badge">—</span></div>
