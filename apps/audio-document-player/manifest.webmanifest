@@ -1,0 +1,12 @@
+{
+  "name": "Dengar & Baca — Audio dan Dokumen",
+  "short_name": "Dengar & Baca",
+  "description": "Pemutar audio lokal dengan pembaca MD, SRT, dan TXT.",
+  "lang": "id-ID",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1120",
+  "theme_color": "#101827",
+  "orientation": "any"
+}
