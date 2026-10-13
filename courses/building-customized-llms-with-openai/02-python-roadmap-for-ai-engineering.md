@@ -1,279 +1,175 @@
 # Python dari Nol untuk AI Application Engineer
 
-> **Status:** rancangan belajar untuk ditinjau melalui PR.  
-> **Target:** belajar Python dari pemula sampai cukup kuat untuk membangun aplikasi AI berbasis API dan RAG.  
-> **Metode:** Google Colab terlebih dahulu, latihan kecil, lalu proyek yang bisa diuji.  
-> **Batasan:** ini bukan kurikulum untuk menjadi peneliti machine learning atau melatih model dari nol.
+> **Status:** revisi berdasarkan audit; tetap melalui PR dan belum menjadi acuan final sampai di-merge.
+> **Tujuan:** membangun kemampuan Python praktis yang diperlukan untuk jalur AI Application Engineer pada `ROADMAP_AI_ENGINEER_FINAL.md`.
+> **Metode:** Google Colab dahulu, belajar dari kebutuhan proyek, dan bukti praktik sebelum menyatakan lulus.
+> **Bukan tujuan:** menjadi peneliti ML, melatih model dari nol, atau menuntaskan seluruh fitur Python.
 
-## 1. Keputusan belajar
+## 1. Acuan dan prioritas
 
-Roadmap utama [AI Engineer Roadmap 2026](https://github.com/teknisiAkhirat/ai-engineer-roadmap-2026/blob/main/README.md) menetapkan Python intermediate yang bersifat terapan sebagai keterampilan wajib, dengan perkiraan sekitar 20 jam praktik. Fondasi software engineering yang juga dibutuhkan meliputi JSON, HTTP/API, pengelolaan rahasia, penanganan error, debugging, pengujian, dan async dasar.
+Dokumen ini adalah **jembatan belajar Python**, bukan roadmap karier yang berdiri sendiri. Acuan urutan dan Definition of Done (DoD) adalah:
 
-Namun, karena titik awal pembelajar sekarang adalah **pemula yang baru mengenal nama Python**, 20 jam tersebut diperlakukan sebagai perkiraan untuk fondasi awal, bukan jaminan langsung mahir. Durasi sebenarnya mengikuti hasil latihan dan penguasaan konsep. Materi di bawah memperluas fondasi tersebut tanpa mengubah sasaran akhirnya.
+1. [ROADMAP_AI_ENGINEER_FINAL.md](https://github.com/teknisiAkhirat/ai-engineer-roadmap-2026/blob/main/ROADMAP_AI_ENGINEER_FINAL.md) — tujuan dan urutan fase.
+2. [TASK-LOG.md](https://github.com/teknisiAkhirat/ai-engineer-roadmap-2026/blob/main/TASK-LOG.md) — posisi belajar dan bukti kemajuan aktual.
 
-## 2. Sasaran akhir
+README umum repo AI Engineer hanya konteks; README tersebut masih memuat rencana lama. Jika ada konflik, ikuti roadmap FINAL dan TASK-LOG, lalu tandai konflik yang belum terselesaikan.
 
-Setelah menyelesaikan jalur ini, pembelajar diharapkan mampu:
+**Prioritas hidup tetap dagang sparepart/HP bekas, servis sesuai kemampuan, dan keluarga.** Roadmap AI Engineer adalah side-track yang boleh berjalan pelan atau berhenti sementara.
 
-- Membaca dan menjelaskan kode Python sederhana.
-- Menulis program kecil tanpa hanya menyalin contoh.
-- Menggunakan kondisi, perulangan, koleksi data, dan fungsi.
-- Membaca dan menulis berkas teks serta JSON.
-- Memahami dan memperbaiki error dasar menggunakan pesan error/traceback.
-- Membagi kode ke fungsi dan modul yang masuk akal.
-- Memakai type hints dan kelas sederhana bila memang membantu.
-- Mengirim permintaan HTTP ke API dan memproses respons JSON.
-- Menjaga API key menggunakan Secrets/variabel lingkungan, bukan menulisnya di kode.
-- Memahami dasar async/await, timeout, dan retry untuk pemanggilan API.
-- Menulis pengujian dasar untuk memastikan kode bekerja.
-- Membuat program kecil yang bisa menjadi fondasi proyek LLM API dan RAG.
+### Anggaran waktu
 
-## 3. Urutan belajar
+Roadmap FINAL menetapkan sekitar **3 jam per minggu**, bukan kewajiban belajar setiap hari. Gunakan itu sebagai rencana dasar. Sesi satu jam boleh dipakai saat ada waktu; tidak perlu mengejar ketertinggalan jika satu minggu terlewat.
 
-### Tahap 0 — Lingkungan dan cara menjalankan kode
+Perkiraan jam dalam dokumen ini adalah **perkiraan perencanaan, bukan fakta terverifikasi atau tenggat**. Kecepatan mengikuti hasil diagnostik dan bukti praktik. Jangan menyimpulkan kemampuan hanya dari jumlah jam.
 
-**Pelajari**
-- Apa itu Python, kode, program, dan notebook.
-- Google Colab: notebook, cell kode, menjalankan ulang cell, dan menyimpan notebook.
-- Fungsi print(), komentar, string, dan error pertama.
-- Perbedaan antara menulis kode dan menjalankannya.
+## 2. Dua gerbang yang berbeda
 
-**Latihan**
-- Tampilkan pesan dan informasi sederhana.
-- Ubah kode, jalankan ulang, dan jelaskan hasilnya.
+Jangan mencampur kesiapan mengikuti kursus Columbia dengan kesiapan menyelesaikan fase roadmap AI Engineer.
 
-**Lulus jika**
-- Bisa membuat notebook baru, menjalankan kode, mengubahnya, dan membaca output.
+### Gerbang A — cukup siap mulai kursus Columbia
 
-### Tahap 1 — Nilai, variabel, dan tipe data
+Halaman resmi Columbia+ menyebut prasyarat **basic Python programming knowledge**. Itu tidak otomatis berarti semua materi dalam roadmap ini wajib selesai sebelum kursus.
 
-**Pelajari**
-- Variabel dan assignment.
-- Tipe data str, int, float, bool, dan None.
-- Operasi angka dan teks.
-- Konversi tipe data seperti int() dan str().
-- Input sederhana jika lingkungan mendukungnya.
+Sebelum membayar atau mulai kursus, lakukan diagnostik mandiri 1–2 jam. Jika belum lulus, pelajari bagian dasar yang gagal saja, lalu ulangi tes. Gunakan materi resmi kursus yang bisa diakses untuk memastikan apakah ada kebutuhan tambahan. Isi Courseworks yang memerlukan login dan rincian praktik yang belum bisa diperiksa **belum terverifikasi secara independen**.
 
-**Latihan proyek**
-- Kalkulator biaya servis HP dengan data contoh, tanpa data pelanggan sungguhan.
+**Tes diagnostik awal (tanpa menyalin jawaban):**
+1. Buat fungsi yang menghitung biaya servis dari beberapa angka dan mengembalikan total dengan `return`.
+2. Gunakan `if` untuk menentukan kategori biaya.
+3. Ulangi data pada sebuah `list` dengan `for`, lalu cari data di sebuah `dict`.
+4. Baca JSON sederhana, akses satu nilai di dalam objek bersarang, lalu ubah nilainya.
+5. Jelaskan traceback sederhana dan perbaiki satu kesalahan yang sengaja dibuat.
 
-**Lulus jika**
-- Bisa menjelaskan tipe data yang dipakai dan memperbaiki kesalahan tipe data sederhana.
+Catat setiap butir sebagai **lulus / perlu latihan**. Ini diagnostik kemampuan saat ini, bukan ujian resmi Columbia. Jika sebagian sudah bisa, jangan mengulang semua materi dari nol.
 
-### Tahap 2 — Kondisi dan logika
+### Gerbang B — siap menjalankan Fase 1 roadmap AI Engineer
 
-**Pelajari**
-- Perbandingan: ==, !=, <, >, <=, >=.
-- if, elif, else.
-- Operator logika and, or, not.
-- Kondisi bertingkat secukupnya.
+Untuk Fase 1, prasyarat Python dasar saja belum cukup. Ikuti DoD pada roadmap FINAL:
+- script memanggil LLM API langsung melalui SDK resmi provider;
+- respons divalidasi menggunakan Pydantic model buatan sendiri;
+- kegagalan validasi ditangani tanpa membuat program crash;
+- ada contoh input/output dan evidence yang dapat diperiksa.
 
-**Latihan proyek**
-- Menentukan status pekerjaan servis dari data contoh.
+Jangan menyatakan Fase 1 selesai hanya karena kursus selesai atau contoh AI berhasil dijalankan.
 
-**Lulus jika**
-- Bisa menulis beberapa cabang keputusan dan menguji kondisi normal maupun batasnya.
+## 3. Jalur belajar minimum
 
-### Tahap 3 — Perulangan
+Kerjakan bagian yang diperlukan, lalu buktikan melalui latihan. Perkiraan jam berikut bersifat kasar dan dapat berubah berdasarkan hasil diagnostik.
 
-**Pelajari**
-- for, while, range().
-- break dan continue.
-- Mengulang daftar data.
-- Menghindari perulangan while yang tidak pernah berhenti.
+### Tahap 0 — menjalankan Python (perkiraan 1–3 jam)
+- Python, program, notebook, dan cell Google Colab.
+- `print()`, komentar, string, dan menjalankan ulang cell.
+- Latihan: ubah program sederhana dan jelaskan output.
+- **Lulus jika:** dapat membuat notebook, menjalankan/mengubah kode, dan membaca output.
 
-**Latihan proyek**
-- Menghitung total beberapa pekerjaan dan menampilkan ringkasan daftar.
+### Tahap 1 — variabel dan tipe data (perkiraan 3–5 jam)
+- Variabel, assignment, `str`, `int`, `float`, `bool`, `None`, operasi dan konversi tipe.
+- F-string untuk menyusun teks dengan nilai variabel.
+- Latihan: kalkulator biaya servis HP dengan data sintetis.
+- **Lulus jika:** dapat menjelaskan tipe data dan memperbaiki kesalahan tipe sederhana.
 
-**Lulus jika**
-- Bisa memilih perulangan yang sesuai, memperkirakan hasilnya, dan mencegah loop tanpa akhir.
+### Tahap 2 — kondisi dan logika (perkiraan 2–4 jam)
+- `if/elif/else`, perbandingan, `and/or/not`.
+- Latihan: menentukan kategori/status pekerjaan servis.
+- **Lulus jika:** menulis beberapa cabang keputusan dan menguji kondisi normal serta batas.
 
-### Tahap 4 — Struktur data yang sering dipakai aplikasi
+### Tahap 3 — perulangan (perkiraan 2–4 jam)
+- `for`, `while`, `range()`, `break`, `continue`; hindari loop tanpa akhir.
+- Latihan: menghitung total beberapa pekerjaan.
+- **Lulus jika:** memilih perulangan yang sesuai dan dapat memperkirakan hasilnya.
 
-**Pelajari**
-- list, tuple, dict, dan set.
-- Indeks, slicing, menambah/mengubah/menghapus item.
-- Mengulang isi list dan dictionary.
-- Memilih struktur data sesuai kebutuhan.
-- Comprehension sederhana setelah pola biasa dipahami.
+### Tahap 4 — koleksi data (perkiraan 4–7 jam)
+- `list`, `tuple`, `dict`, `set`; indeks, slicing, menambah/mengubah/menghapus item.
+- Iterasi list/dictionary, akses JSON bersarang, comprehension sederhana.
+- **Lulus jika:** dapat menyimpan, mencari, mengubah, dan merangkum data sederhana.
 
-**Latihan proyek**
-- Mengelola daftar komponen dan stok contoh di memori.
+### Tahap 5 — fungsi (perkiraan 3–5 jam)
+- `def`, parameter/argumen, `return`, nilai default, cakupan variabel dasar.
+- Bedakan `print()` dengan `return`; satu fungsi sebaiknya punya satu tanggung jawab.
+- **Lulus jika:** dapat membuat dan menguji fungsi tanpa menyalin contoh.
 
-**Lulus jika**
-- Bisa menyimpan, mencari, mengubah, dan merangkum sekumpulan data sederhana.
+### Tahap 6 — berkas dan JSON (perkiraan 4–7 jam)
+- Membaca/menulis teks, UTF-8, `with`, modul `json` (`load/dump/loads/dumps`).
+- Memahami objek, array, string, angka, boolean, dan null; mencari teks.
+- **Lulus jika:** menyimpan data, menjalankan ulang program, lalu membaca data kembali.
+- **Catatan Colab:** berkas di penyimpanan sementara runtime dapat hilang saat runtime di-reset. Untuk uji persistensi, simpan di Google Drive atau unduh berkas lalu unggah kembali; jangan menganggap file lokal `/content` akan tetap ada setelah reset.
 
-### Tahap 5 — Fungsi
+### Tahap 7 — error dan debugging (perkiraan 3–5 jam)
+- Membaca traceback, membedakan error sintaks dan error saat runtime.
+- Validasi input, `try/except` yang spesifik, debugging dengan eksperimen kecil.
+- **Lulus jika:** sengaja membuat dan memperbaiki tiga bug, lalu menjelaskan penyebabnya.
 
-**Pelajari**
-- Membuat fungsi dengan def.
-- Parameter, argumen, dan nilai balik return.
-- Variabel lokal dan global secara dasar.
-- Nilai default dan fungsi kecil dengan satu tanggung jawab.
-- Memecah program panjang menjadi bagian yang bisa diuji.
-
-**Latihan proyek**
-- Mengubah kalkulator servis menjadi program dengan fungsi terpisah.
-
-**Lulus jika**
-- Bisa membuat fungsi sendiri, memanggilnya, dan menjelaskan perbedaan print() dengan return.
-
-### Tahap 6 — Berkas, teks, dan JSON
-
-**Pelajari**
-- Membaca/menulis berkas teks.
-- Encoding UTF-8 dan penggunaan with.
-- Modul json: loads, dumps, load, dan dump.
-- Struktur JSON: objek, array, string, angka, boolean, dan null.
-- Dasar pemrosesan teks dan pencarian kata.
-
-**Latihan proyek**
-- Menyimpan dan memuat data contoh dari berkas JSON.
-
-**Lulus jika**
-- Program bisa menyimpan data, dijalankan ulang, lalu membaca kembali data tersebut.
-
-### Tahap 7 — Error, debugging, dan logging
-
-**Pelajari**
-- Membaca traceback/pesan error secara terarah.
-- Error sintaks dibandingkan error saat program berjalan.
-- try/except untuk kesalahan yang memang bisa ditangani.
-- Validasi input.
-- Debugging dengan eksperimen kecil dan print().
-- Dasar logging; kapan beralih dari print() ke log.
-
-**Latihan proyek**
-- Sengaja membuat beberapa bug pada program JSON, kemudian menemukan dan memperbaikinya.
-
-**Lulus jika**
-- Bisa menjelaskan penyebab error umum dan tidak sekadar menutup semua error dengan except yang terlalu luas.
-
-### Tahap 8 — Modul, pustaka, dan kode yang rapi
-
-**Pelajari**
-- import dan modul standar seperti json, pathlib, dan datetime.
-- Menggunakan pustaka pihak ketiga melalui pip ketika diperlukan.
-- Gambaran venv dan file dependensi; pahami bahwa Colab sudah menyediakan lingkungan sementara.
-- Type hints dasar seperti str, int, list[str], dan anotasi nilai balik.
-- Kelas sederhana hanya ketika data dan perilaku memang perlu dikelompokkan.
-- Prinsip satu fungsi/satu tanggung jawab.
-
-**Latihan proyek**
-- Merapikan program sebelumnya menjadi beberapa fungsi dan modul yang mudah dibaca.
-
-**Lulus jika**
-- Bisa mengimpor modul, membaca dokumentasi penggunaan dasar, dan memahami type hints pada fungsi.
-
-### Tahap 9 — Python untuk HTTP API
-
-**Pelajari**
-- Konsep HTTP request/response.
-- Method umum: GET dan POST.
-- Status code, header, body, timeout, dan kegagalan jaringan.
-- Memanggil API memakai pustaka yang sesuai, misalnya requests atau httpx.
-- Mengurai dan memvalidasi respons JSON.
-- Menyimpan API key di Colab Secrets atau variabel lingkungan.
-- Jangan pernah commit token/API key ke GitHub atau menaruhnya di output notebook.
-
-**Latihan proyek**
-- Mengambil data dari API publik yang tidak memerlukan rahasia, lalu mengolah respons JSON.
-- Setelah itu, latihan API berautentikasi hanya jika penyedia dan anggarannya sudah dipilih.
-
-**Lulus jika**
-- Bisa melakukan request, memeriksa status respons, menangani timeout/error, dan membaca JSON.
-
-### Tahap 10 — Dasar async/await untuk pemanggilan layanan
-
-**Pelajari**
-- Mengapa menunggu respons jaringan berbeda dari menghitung secara lokal.
-- async def, await, dan konsep coroutine.
-- Timeout dan batas retry secara sederhana.
-- Jangan memakai async sebelum memahami fungsi biasa dan request HTTP sinkron.
-
-**Latihan**
-- Membaca dan memodifikasi contoh kecil pemanggilan layanan asynchronous.
-
-**Lulus jika**
-- Bisa menjelaskan kapan async berguna dan membaca contoh dasar tanpa harus langsung membangun sistem concurrency kompleks.
-
-### Tahap 11 — Pengujian otomatis
-
-**Pelajari**
-- Menguji fungsi dengan input dan hasil yang diharapkan.
-- Assertion dan kasus batas.
-- Dasar pytest setelah memahami fungsi.
-- Memisahkan kode program dari kode pengujian.
-- Pengujian API dilakukan dengan mock atau layanan yang aman; jangan bergantung pada API berbayar untuk setiap tes.
-
-**Latihan proyek**
-- Menulis tes untuk kalkulator, fungsi validasi, dan pembacaan JSON.
-
-**Lulus jika**
-- Bisa menjalankan tes, membaca kegagalan, memperbaiki kode, dan menjalankan tes kembali.
-
-## 4. Materi yang sengaja tidak diprioritaskan
-
-Untuk target **AI Application Engineer**, materi berikut tidak menjadi penghalang sebelum mulai membangun aplikasi:
-
-- OOP tingkat lanjut, inheritance yang kompleks, dan design patterns secara mendalam.
-- Decorator, generator, metaclass, dan fitur bahasa yang jarang dibutuhkan di tahap awal.
-- Algoritma kompetitif dan struktur data tingkat lanjut.
-- NumPy/Pandas mendalam sebelum ada kebutuhan pengolahan data yang nyata.
-- Matematika machine learning mendalam, training model dari nol, CUDA/GPU engineering.
-- Async/concurrency tingkat lanjut dan arsitektur microservices.
-
-Materi tersebut bisa dipelajari nanti jika kebutuhan proyek memang mengharuskannya. Ini bukan berarti semuanya tidak berguna; hanya bukan prioritas awal untuk sasaran kita.
-
-## 5. Cara belajar dan aturan kelulusan
-
-Gunakan Google Colab pada tahap awal agar tidak perlu mengurus instalasi. Satu sesi belajar sekitar satu jam dapat dibagi menjadi:
-
-- 10 menit mengulang materi sebelumnya.
-- 15 menit memahami konsep baru.
-- 25 menit menulis dan menjalankan kode.
-- 10 menit latihan mandiri dan mencatat kesalahan.
-
-Setiap topik memiliki tiga status:
-
-1. **Belum dipelajari** — belum memahami konsep.
-2. **Sedang dikuasai** — bisa mengikuti contoh tetapi belum mampu membuat variasi sendiri.
-3. **Dikuasai** — mampu menjelaskan, menulis, mengubah, dan menguji kode untuk masalah selevel.
-
-Jangan menganggap materi selesai hanya karena video atau halaman sudah dibaca. Gunakan latihan tanpa menyalin contoh sebagai bukti penguasaan. Jika belum lulus, ulangi dengan contoh berbeda.
-
-## 6. Proyek bertahap
-
-1. **Kalkulator biaya servis** — variabel, angka, kondisi, fungsi.
-2. **Pengelola stok contoh** — list/dictionary, perulangan, validasi.
-3. **Penyimpanan JSON** — baca/tulis berkas, error handling.
-4. **Pembaca API publik** — HTTP, JSON, timeout, error handling.
-5. **Program kecil yang diuji** — modul, type hints, pytest.
-6. **Pencari dokumen lokal** — baca berkas Markdown/TXT dan cari bagian relevan.
-7. **RAG dasar** — setelah fondasi cukup, hubungkan hasil pencarian ke model AI melalui API.
-
-Gunakan data latihan sintetis atau publik pada tahap awal. Jangan gunakan data pribadi pelanggan atau dokumen sensitif untuk latihan.
-
-## 7. Kaitan dengan roadmap AI Engineer
-
-Python adalah fondasi, bukan tujuan akhir. Setelah tahap API dan pengujian cukup dikuasai, jalur berikutnya mengikuti roadmap utama:
-
-1. LLM API dan structured output.
-2. Prompt engineering dan evaluasi dasar.
-3. RAG: ingestion, pemotongan dokumen (chunking), embedding, penyimpanan, retrieval, dan penyusunan konteks.
-4. Backend dengan FastAPI serta validasi Pydantic.
-5. Database dan persistensi.
-6. Agentic workflow setelah RAG dan evaluasi cukup stabil.
-7. Keamanan, deployment, observability, serta optimasi biaya.
-
-Kursus *Building Customized LLMs with OpenAI* dapat dipelajari berdampingan secara ringan untuk mengenali istilah dan gambaran besarnya. Namun, implementasi yang memerlukan Python yang belum dikuasai harus kembali ke latihan fondasi.
-
-## 8. Sumber belajar utama
-
-- [Python for Everybody](https://www.py4e.com/) — jalur pemula dan latihan.
-- [Dokumentasi resmi Python: Tutorial](https://docs.python.org/3/tutorial/index.html) — referensi bahasa; beberapa bagian mengasumsikan pengetahuan pemrograman dasar.
-- [Google Colab](https://colab.research.google.com/) — lingkungan praktik di browser.
-- [Google Python Education](https://developers.google.com/edu/python) — referensi tambahan.
-- [AI Engineer Roadmap 2026 milik teknisiAkhirat](https://github.com/teknisiAkhirat/ai-engineer-roadmap-2026/blob/main/README.md) — sasaran kemampuan yang disesuaikan dengan AI Application Engineer.
-
-**Prinsip akhir:** pelajari Python yang benar-benar diperlukan untuk membangun, menguji, dan memelihara aplikasi AI. Utamakan pemahaman dan praktik; jangan mengejar semua fitur Python sekaligus.
+### Tahap 8 — modul dan kode rapi (perkiraan 2–4 jam)
+- `import`, modul standar seperti `json`, `pathlib`, `datetime`; cara membaca dokumentasi.
+- Type hints dasar: `str`, `int`, `list[str]`; kelas sederhana hanya bila memang membantu.
+- `pip` secukupnya. Konsep `venv` boleh dikenali, tetapi tidak menjadi gerbang awal.
+- **Lulus jika:** dapat membagi program kecil menjadi fungsi/modul dan memahami type hints dasar.
+
+### Tahap 9 — HTTP API dan pemanggilan LLM (perkiraan 5–8 jam untuk dasar API; praktik SDK LLM dilakukan sebagai jembatan Fase 1)
+- Request/response, GET/POST, status code, header, body, JSON, dan kegagalan jaringan.
+- Mulai dengan API publik yang tidak memerlukan token.
+- Terapkan timeout dan retry terbatas secara sinkron; misalnya maksimal tiga percobaan dengan jeda yang wajar. Retry hanya untuk kegagalan yang layak dicoba ulang, bukan semua error.
+- Setelah dasar HTTP dipahami, panggil LLM langsung menggunakan SDK resmi provider. Pilih provider dan tetapkan batas pengeluaran sebelum memakai API berbayar.
+- Simpan API key di Colab Secrets/variabel lingkungan; jangan menaruhnya di kode, output notebook, atau GitHub.
+- **Lulus dasar API jika:** request berhasil, status diperiksa, timeout/error ditangani, dan respons JSON diproses.
+- **Lulus jembatan Fase 1 jika:** SDK memperoleh respons LLM, Pydantic memvalidasi output, dan validation failure ditangani tanpa crash. Gunakan Pydantic model sederhana dan kelas hanya sejauh diperlukan.
+
+### Tahap 10 — AI fundamentals dan NumPy minimum (sebagai jembatan menuju RAG, bukan prasyarat universal kursus)
+- Pahami istilah token, embedding, chunk, cosine similarity, top-k, RAG, dan perbedaan RAG dengan fine-tuning.
+- Pelajari NumPy secukupnya untuk menghitung cosine similarity pada beberapa vektor/embedding dan memahami hasilnya. Tidak perlu mendalami NumPy/Pandas.
+- Latihan: bandingkan tiga kalimat menggunakan embedding dari provider yang dipilih; perhatikan bahwa kemiripan angka bukan jaminan makna atau kebenaran.
+- Perkiraan awal 3–6 jam untuk pengenalan; tambah latihan bila belum dapat menjelaskan hasilnya.
+- **Lulus jika:** dapat menjelaskan alur chunk → embedding → similarity → top-k dengan kata sendiri dan memeriksa hasil sederhana.
+
+### Tahap 11 — SQLite untuk persistensi (saat masuk Fase 2)
+- Pelajari modul bawaan `sqlite3`: membuat tabel, insert, query, dan membaca hasil.
+- **Lulus jika:** hasil percakapan/LLM contoh tersimpan dan bisa di-query ulang, sesuai DoD Fase 2.
+- Jangan mengganti ini dengan framework ORM pada tahap awal.
+
+## 4. Materi yang ditunda
+
+Materi berikut tidak menjadi syarat untuk memulai kursus Columbia atau menuntaskan fondasi awal, kecuali ada bukti kebutuhan dari latihan/proyek:
+- `async/await` dan concurrency: tunda sampai ada kebutuhan nyata; kuasai request sinkron, timeout, dan retry terlebih dahulu.
+- `pytest` dan pengujian otomatis yang lebih lengkap: mulai dari tes manual/assertion sederhana; tambah pytest saat proyek membutuhkan pengujian berulang.
+- Pengelolaan `venv` secara mendalam: pahami konsep, praktikkan ketika beralih ke lingkungan lokal/proyek.
+- OOP tingkat lanjut, decorator, generator, metaclass, algoritma kompetitif, NumPy/Pandas mendalam, training model, CUDA, dan microservices.
+- Fine-tuning **bukan target utama roadmap FINAL**. Jika modul kursus membahasnya, perlakukan sebagai pengenalan kecuali tujuan belajar sengaja diubah.
+
+Jika materi resmi kursus ternyata membutuhkan sesuatu yang belum ada di jalur ini, catat bukti dan tambahkan hanya materi minimum yang diperlukan. Jangan menganggap JSONL/fine-tuning wajib sebelum memeriksa modul kursus yang benar-benar tersedia.
+
+## 5. Urutan yang disarankan
+
+1. Jalankan tes diagnostik 1–2 jam; tandai kemampuan yang sudah ada dan yang perlu latihan.
+2. Pelajari Tahap 0–7 hanya sejauh dibutuhkan sampai dapat menulis program kecil sendiri.
+3. Pelajari dasar HTTP di Tahap 9, lalu lakukan jembatan SDK LLM + Pydantic untuk memenuhi DoD Fase 1.
+4. Setelah Gerbang A terpenuhi, putuskan apakah kursus Columbia sesuai tujuan dan anggaran. Tidak perlu menunda belajar Python sambil menunggu keputusan kursus.
+5. Untuk roadmap utama, lanjutkan retry/timeout dan SQLite pada Fase 2, kemudian chunking/embedding/NumPy/cosine/top-k untuk RAG manual pada Fase 3.
+6. Tunda async dan pytest sampai ada kebutuhan yang jelas.
+
+## 6. Biaya dan keamanan
+
+- Google Colab dapat digunakan untuk latihan dasar tanpa mengatur instalasi lokal.
+- API berbayar bukan syarat untuk mempelajari Python. Mulai dari API publik tanpa token dan data contoh.
+- Sebelum memakai LLM API, periksa harga provider dan tetapkan batas pengeluaran. Jangan mengandalkan key yang memiliki izin luas jika key terbatas dapat digunakan.
+- Jangan menaruh API key, token, data pelanggan, atau dokumen pribadi di notebook publik maupun repository.
+- Kursus Columbia berbayar bukan prasyarat untuk menjadi AI Application Engineer. Evaluasi biaya kursus, API, dan nilai kemampuan yang akan diperoleh sebelum mendaftar.
+
+## 7. Checklist praktik
+
+Gunakan checklist ini sebagai bukti kemampuan; tidak semua butir harus selesai sebelum mulai kursus.
+
+- [ ] Menulis fungsi kalkulator biaya servis tanpa menyalin dan menguji lima kasus manual.
+- [ ] Membaca JSON stok, mencari item, menyimpan perubahan, lalu menguji persistensi sesuai batasan Colab.
+- [ ] Membuat tiga bug dengan sengaja dan memperbaikinya berdasarkan traceback.
+- [ ] Memanggil API publik dengan pemeriksaan status, timeout, dan retry terbatas.
+- [ ] Menyimpan API key di Secrets dan memastikan key tidak muncul di output.
+- [ ] Untuk DoD Fase 1: memanggil LLM melalui SDK, memvalidasi respons dengan Pydantic, dan menangani kegagalan validasi.
+- [ ] Untuk jembatan RAG: menghitung cosine similarity sederhana dengan NumPy dan menjelaskan hasilnya.
+- [ ] Menjelaskan embedding, chunk, top-k, RAG vs fine-tuning dengan kata sendiri.
+
+## 8. Aturan kelulusan dan pencatatan
+
+Setiap topik berstatus **Belum dipelajari**, **Sedang dikuasai**, atau **Dikuasai**. Status “Dikuasai” berarti dapat menjelaskan konsep, menulis variasi kode tanpa menyalin, dan memeriksa hasilnya.
+
+Ikuti siklus **LEARN → IMPLEMENT → TEST → VERIFY → RECORD**. Simpan evidence kecil yang bisa diperiksa dan catat kemajuan di TASK-LOG setelah ada hasil nyata. Kursus selesai, build berhasil, atau klaim AI saja bukan bukti bahwa DoD terpenuhi.
+
+> **NO EVIDENCE, NO DONE.**
