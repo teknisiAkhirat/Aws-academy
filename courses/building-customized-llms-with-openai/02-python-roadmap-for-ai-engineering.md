@@ -18,7 +18,7 @@ README umum repo AI Engineer hanya konteks; README tersebut masih memuat rencana
 
 ### Anggaran waktu
 
-Roadmap FINAL menetapkan sekitar **3 jam per minggu**, bukan kewajiban belajar setiap hari. Gunakan itu sebagai rencana dasar. Sesi satu jam boleh dipakai saat ada waktu; tidak perlu mengejar ketertinggalan jika satu minggu terlewat.
+Ada dua target yang perlu dibedakan: target pribadi belajar hingga sekitar **1 jam per hari saat kondisi memungkinkan**, dan target konservatif di roadmap FINAL yaitu **sekitar 3 jam per minggu** karena belajar ini adalah side-track. Sampai roadmap utama diubah secara sengaja, gunakan 3 jam/minggu sebagai baseline yang aman; sesi satu jam boleh dilakukan saat ada waktu, tetapi jangan memaksakan diri atau mengejar ketertinggalan jika satu minggu terlewat.
 
 Perkiraan jam dalam dokumen ini adalah **perkiraan perencanaan, bukan fakta terverifikasi atau tenggat**. Kecepatan mengikuti hasil diagnostik dan bukti praktik. Jangan menyimpulkan kemampuan hanya dari jumlah jam.
 
@@ -107,23 +107,26 @@ Kerjakan bagian yang diperlukan, lalu buktikan melalui latihan. Perkiraan jam be
 ### Tahap 9 — HTTP API dan pemanggilan LLM (perkiraan 5–8 jam untuk dasar API; praktik SDK LLM dilakukan sebagai jembatan Fase 1)
 - Request/response, GET/POST, status code, header, body, JSON, dan kegagalan jaringan.
 - Mulai dengan API publik yang tidak memerlukan token.
-- Terapkan timeout dan retry terbatas secara sinkron; misalnya maksimal tiga percobaan dengan jeda yang wajar. Retry hanya untuk kegagalan yang layak dicoba ulang, bukan semua error.
+- Pada tahap ini, fokus pada request sinkron, memeriksa status, membaca JSON, dan menangani kegagalan dasar. Timeout dan retry sebagai defensive engineering dipraktikkan di Tahap 10/Fase 2, sebelum beralih ke RAG.
 - Setelah dasar HTTP dipahami, panggil LLM langsung menggunakan SDK resmi provider. Pilih provider dan tetapkan batas pengeluaran sebelum memakai API berbayar.
 - Simpan API key di Colab Secrets/variabel lingkungan; jangan menaruhnya di kode, output notebook, atau GitHub.
-- **Lulus dasar API jika:** request berhasil, status diperiksa, timeout/error ditangani, dan respons JSON diproses.
+- **Lulus dasar API jika:** request berhasil, status diperiksa, error dasar ditangani, dan respons JSON diproses. Timeout/retry lanjutan bukan gerbang Fase 1.
 - **Lulus jembatan Fase 1 jika:** SDK memperoleh respons LLM, Pydantic memvalidasi output, dan validation failure ditangani tanpa crash. Gunakan Pydantic model sederhana dan kelas hanya sejauh diperlukan.
 
-### Tahap 10 — AI fundamentals dan NumPy minimum (sebagai jembatan menuju RAG, bukan prasyarat universal kursus)
+### Tahap 10 — Defensive engineering dan SQLite (Fase 2 roadmap FINAL)
+- Tambahkan timeout agar panggilan API tidak menunggu selamanya.
+- Terapkan retry terbatas, misalnya maksimal tiga percobaan dengan jeda; retry hanya untuk kegagalan yang layak dicoba ulang, bukan semua error.
+- Tangani rate limit, kegagalan jaringan, dan respons tidak valid secara wajar.
+- Pelajari modul bawaan `sqlite3`: membuat tabel, insert, query, dan membaca hasil.
+- **Lulus jika:** API call menerapkan timeout dan retry sesuai kebutuhan, serta hasil percakapan/LLM tersimpan di SQLite dan bisa di-query ulang.
+- Jangan mengganti SQLite dengan framework ORM pada tahap awal.
+
+### Tahap 11 — AI fundamentals dan NumPy minimum (jembatan menuju RAG/Fase 3, bukan prasyarat universal kursus)
 - Pahami istilah token, embedding, chunk, cosine similarity, top-k, RAG, dan perbedaan RAG dengan fine-tuning.
 - Pelajari NumPy secukupnya untuk menghitung cosine similarity pada beberapa vektor/embedding dan memahami hasilnya. Tidak perlu mendalami NumPy/Pandas.
 - Latihan: bandingkan tiga kalimat menggunakan embedding dari provider yang dipilih; perhatikan bahwa kemiripan angka bukan jaminan makna atau kebenaran.
 - Perkiraan awal 3–6 jam untuk pengenalan; tambah latihan bila belum dapat menjelaskan hasilnya.
 - **Lulus jika:** dapat menjelaskan alur chunk → embedding → similarity → top-k dengan kata sendiri dan memeriksa hasil sederhana.
-
-### Tahap 11 — SQLite untuk persistensi (saat masuk Fase 2)
-- Pelajari modul bawaan `sqlite3`: membuat tabel, insert, query, dan membaca hasil.
-- **Lulus jika:** hasil percakapan/LLM contoh tersimpan dan bisa di-query ulang, sesuai DoD Fase 2.
-- Jangan mengganti ini dengan framework ORM pada tahap awal.
 
 ## 4. Materi yang ditunda
 
@@ -142,7 +145,7 @@ Jika materi resmi kursus ternyata membutuhkan sesuatu yang belum ada di jalur in
 2. Pelajari Tahap 0–7 hanya sejauh dibutuhkan sampai dapat menulis program kecil sendiri.
 3. Pelajari dasar HTTP di Tahap 9, lalu lakukan jembatan SDK LLM + Pydantic untuk memenuhi DoD Fase 1.
 4. Setelah Gerbang A terpenuhi, putuskan apakah kursus Columbia sesuai tujuan dan anggaran. Tidak perlu menunda belajar Python sambil menunggu keputusan kursus.
-5. Untuk roadmap utama, lanjutkan retry/timeout dan SQLite pada Fase 2, kemudian chunking/embedding/NumPy/cosine/top-k untuk RAG manual pada Fase 3.
+5. Ikuti urutan roadmap FINAL: timeout/retry dan SQLite pada Fase 2, lalu chunking/embedding/NumPy/cosine/top-k untuk RAG manual pada Fase 3.
 6. Tunda async dan pytest sampai ada kebutuhan yang jelas.
 
 ## 6. Biaya dan keamanan
@@ -160,7 +163,7 @@ Gunakan checklist ini sebagai bukti kemampuan; tidak semua butir harus selesai s
 - [ ] Menulis fungsi kalkulator biaya servis tanpa menyalin dan menguji lima kasus manual.
 - [ ] Membaca JSON stok, mencari item, menyimpan perubahan, lalu menguji persistensi sesuai batasan Colab.
 - [ ] Membuat tiga bug dengan sengaja dan memperbaikinya berdasarkan traceback.
-- [ ] Memanggil API publik dengan pemeriksaan status, timeout, dan retry terbatas.
+- [ ] Memanggil API publik dan memeriksa status/JSON pada Fase 1; kemudian membuktikan timeout dan retry terbatas pada Fase 2.
 - [ ] Menyimpan API key di Secrets dan memastikan key tidak muncul di output.
 - [ ] Untuk DoD Fase 1: memanggil LLM melalui SDK, memvalidasi respons dengan Pydantic, dan menangani kegagalan validasi.
 - [ ] Untuk jembatan RAG: menghitung cosine similarity sederhana dengan NumPy dan menjelaskan hasilnya.
