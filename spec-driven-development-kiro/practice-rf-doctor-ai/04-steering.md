@@ -1,9 +1,8 @@
 # Steering — RF Doctor AI
 
-> [REVISI AUDIT 2026-10-17] Status
+> [REVISI AUDIT 2026-10-17]
 > [REVISI AUDIT 2026-10-17 B2]
-
-Status dan aturan diperjelas; belum berlaku sampai disetujui pemilik.
+> Status dan aturan diperjelas; belum berlaku sampai disetujui pemilik.
 
 Status: PROPOSED - berlaku setelah disetujui pemilik  
 Versi: 0.2
