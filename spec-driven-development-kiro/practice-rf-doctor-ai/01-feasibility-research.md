@@ -1,13 +1,16 @@
 # Riset Kelayakan — RF Doctor AI
 
-> [REVISI AUDIT 2026-10-17] Klaim yang belum diuji pada lingkungan pemilik secara eksplisit ditandai UNCONFIRMED.
+> [REVISI AUDIT 2026-10-17] Klaim
+> [REVISI AUDIT 2026-10-17 B2]
+
+Klaim yang belum diuji pada lingkungan pemilik secara eksplisit ditandai UNCONFIRMED.
 
 Status: INITIAL RESEARCH — belum menjadi bukti kelayakan akhir  
 Tanggal pemeriksaan dokumen: 2026-10-17
 
 ## 1. Ringkasan
 
-Proyek mungkin layak sebagai asisten pencatatan dan penalaran diagnosis, tetapi nilai inti belum terbukti dan knowledge base belum tersedia/ditinjau. Gerbang awal adalah SPIKE-01: uji manual 10–15 kasus servis nyata yang sudah dianonimkan memakai format keluaran desain, lalu pemilik menilai manfaatnya.
+Proyek mungkin layak sebagai asisten pencatatan dan penalaran diagnosis, tetapi nilai inti belum terbukti dan knowledge base belum tersedia/ditinjau. Gerbang awal adalah SPIKE-01: SPIKE-01A (tanpa KB) dan SPIKE-01B (dengan KB setelah KB-01/ADR-012). Jumlah kasus: 10-15 USULAN; OWNER TO CONFIRM. Ambang lulus ditetapkan sebelum hasil dilihat; protokol ada di 08-spike-01-protocol.md.
 
 Pengukuran fisik pada antena, filter, PA, jalur PCB, dan IC RF tetap membutuhkan prosedur servis serta alat yang sesuai. Aplikasi tidak boleh menyatakan dapat mengukur jalur RF fisik melalui software saja.
 
@@ -29,7 +32,9 @@ Temuan awal yang perlu diuji pada perangkat target:
 
 Status detail ketersediaan tiap metrik/izin di perangkat pemilik: UNCONFIRMED. Tidak ada penggunaan TelephonyManager di MVP.
 
-## 3. Lingkungan build & alternatif platform [REVISI AUDIT 2026-10-17]
+## 3. Opsi sebelum aplikasi kustom dan lingkungan build [REVISI AUDIT 2026-10-17 B2]
+
+**Opsi 0 — tanpa aplikasi kustom dulu (UNCONFIRMED):** spreadsheet/Markdown lokal + template prompt. Kelebihan: setup berpotensi lebih ringan; kekurangan: alur manual dan privasi tetap harus dijaga. Belum diuji; bukan keputusan pemilik.
 
 Kondisi pemilik yang menjadi input perbandingan:
 - Pengembangan sehari-hari mobile-first dari HP Android melalui Termux.
