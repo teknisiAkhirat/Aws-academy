@@ -46,7 +46,7 @@ Versi: 0.2
 - Verify/evidence: pemilik meninjau sampel; catatan tanpa asal-usul/izin atau yang belum ditinjau tidak ditandai VERIFIED.
 - Status: BLOCKED ON OWNER-PROVIDED NOTES AND REVIEW.
 
-### SPIKE-01A — Uji manual tanpa KB
+### SPIKE-01A — Uji manual tanpa KB [REVISI AUDIT 2026-10-17 B2]
 - Size: M
 - Requirements/AC: FR-05..FR-08; AC-04, AC-15, AC-16.
 - Output: baseline tanpa referensi KB. Jumlah kasus: 10-15 USULAN; OWNER TO CONFIRM.
@@ -54,7 +54,7 @@ Versi: 0.2
 - Dependency: tidak ada; dapat mulai kapan saja setelah pemilik menyiapkan kasus aman.
 - Status: BLOCKED ON OWNER PREPARATION; belum dilakukan.
 
-### SPIKE-01B — Uji manual dengan KB
+### SPIKE-01B — Uji manual dengan KB [REVISI AUDIT 2026-10-17 B2]
 - Size: M
 - Requirements/AC: FR-05..FR-09, FR-13; AC-04, AC-14, AC-15, AC-16.
 - Output: ulangi kasus sama dengan catatan KB ber-ID yang diizinkan dan ditinjau; bandingkan dengan SPIKE-01A.
@@ -102,7 +102,7 @@ Versi: 0.2
 - Verify/evidence: fixture valid/invalid dan uji perangkat.
 - Status: BLOCKED.
 
-### SAN-01 — Sanitizer dan fixture privasi
+### SAN-01 — Sanitizer dan fixture privasi [REVISI AUDIT 2026-10-17 B2]
 - Size: M
 - Requirements/AC: NFR-05; AC-08, AC-23.
 - Output: sanitizer + fixture sintetis untuk IMEI, telepon, ICCID, IMSI, email, NIK. Luhn hanya sinyal tambahan, tidak melonggarkan pembuangan/penandaan.
@@ -118,7 +118,7 @@ Versi: 0.2
 - Dependency: SAN-01 untuk ekspor; ADR-012 untuk registry/format KB; ADR-013 untuk backup/restore, hapus/arsip.
 - Status: BLOCKED.
 
-### KB-02 — Registry dan format knowledge lokal
+### KB-02 — Registry dan format knowledge lokal [REVISI AUDIT 2026-10-17 B2]
 - Size: M
 - Requirements/AC: FR-12, FR-13; AC-09, AC-16, AC-19.
 - Output: Markdown/JSON + metadata registry; sumber berizin dengan ID/provenance/status REVIEW NEEDED/REVIEWED/VERIFIED/RETIRED. Isi KB di lokasi ADR-012, bukan repo publik.
@@ -126,7 +126,7 @@ Versi: 0.2
 - Dependency: ADR-012 dan KB-01.
 - Status: BLOCKED ON OWNER DECISION.
 
-### DATA-01 — Backup/restore dan hapus/arsip lokal
+### DATA-01 — Backup/restore dan hapus/arsip lokal [REVISI AUDIT 2026-10-17 B2]
 - Size: M
 - Requirements/AC: FR-18, NFR-10; AC-31, AC-32.
 - Output: konfirmasi hapus/arsip dan backup/restore sesuai ADR-013; retensi berlaku sejak Phase 1.
@@ -219,7 +219,7 @@ Versi: 0.2
 - Verify/evidence: seluruh AC kritis (AC berprioritas MUST yang disetujui di matriks 02) lulus; tes belum dilakukan berstatus UNCONFIRMED.
 - Status: BLOCKED ON OWNER APPROVAL.
 
-### DOC-06 — Setujui steering (04)
+### DOC-06 — Setujui steering (04) [REVISI AUDIT 2026-10-17 B2]
 - Size: S
 - Requirements/AC: governance; AC-11, AC-12.
 - Output: pemilik menyetujui atau memberi catatan pada 04-steering.md.
@@ -227,7 +227,7 @@ Versi: 0.2
 - Dependency: tidak ada.
 - Status: BLOCKED ON OWNER DECISION.
 
-### DOC-07 — Bersihkan penanda REVISI AUDIT sebelum merge
+### DOC-07 — Bersihkan penanda REVISI AUDIT sebelum merge [REVISI AUDIT 2026-10-17 B2]
 - Size: S
 - Requirements/AC: PR-only; AC-11, AC-12.
 - Output: penanda audit dibersihkan hanya atas permintaan/persetujuan pemilik.
