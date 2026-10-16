@@ -10,7 +10,7 @@ Status: DRAFT / INITIAL
 
 Gunakan format: konteks → opsi → keputusan → konsekuensi.
 
-## ADR-001 — Platform aplikasi
+## ADR-001 — Platform aplikasi [REVISI AUDIT 2026-10-17 B2]
 
 - Status: OPEN / OWNER TO DECIDE.
 - Konteks: pemilik bekerja mobile-first dari HP melalui Termux, punya Oracle VPS, dan sudah memiliki aplikasi Flutter offline-first.
@@ -91,7 +91,7 @@ Gunakan format: konteks → opsi → keputusan → konsekuensi.
 - Keputusan: belum dipilih; usulan offline-first tidak mengikat pemilik.
 - OWNER TO DECIDE: strategi lokal, backup, dan sinkronisasi.
 
-## ADR-009 — Aturan sumber kebenaran dan keselamatan diagnosis
+## ADR-009 — Aturan sumber kebenaran dan keselamatan diagnosis [REVISI AUDIT 2026-10-17 B2]
 
 - Status: PROPOSED.
 - Konteks: diagnosis teknis dapat merugikan perangkat jika AI mengarang langkah atau komponen.
@@ -107,7 +107,7 @@ Gunakan format: konteks → opsi → keputusan → konsekuensi.
 - OWNER TO DECIDE: jalur build utama dan fallback.
 - Tidak ada instalasi, perubahan VPS, secret, atau biaya yang dilakukan tanpa izin.
 
-## ADR-011 — Batas biaya bulanan
+## ADR-011 — Batas biaya bulanan [REVISI AUDIT 2026-10-17 B2]
 
 - Status: OPEN / OWNER TO DECIDE.
 - Konteks: biaya AI, backend, storage, build, dan konektivitas belum diketahui.
