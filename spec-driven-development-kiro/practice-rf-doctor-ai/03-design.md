@@ -1,6 +1,9 @@
 # System Design — RF Doctor AI
 
-> [REVISI AUDIT 2026-10-17] Rancangan ini masih usulan; tidak ada keputusan arsitektur final tanpa persetujuan pemilik.
+> [REVISI AUDIT 2026-10-17] Rancangan
+> [REVISI AUDIT 2026-10-17 B2]
+
+Rancangan ini masih usulan; tidak ada keputusan arsitektur final tanpa persetujuan pemilik.
 
 Status: PROPOSED DESIGN — decisions pending owner review  
 Versi: 0.2
@@ -92,9 +95,9 @@ Jika opsi backend dipilih setelah gerbang:
 - Source URL/license/access notes
 - Pencarian teks sederhana terlebih dahulu; pencarian vektor hanya jika diperlukan dan disetujui.
 
-## 5. Sumber kebenaran data [REVISI AUDIT 2026-10-17]
+## 5. Hierarki bukti [REVISI AUDIT 2026-10-17 B2]
 
-Urutan sumber kebenaran:
+Hierarki bukti yang diusulkan:
 1. Hasil pengukuran yang dicatat teknisi, dengan metode/alat, kondisi, satuan, dan waktu.
 2. Hasil pemeriksaan yang diamati langsung dan diberi label VERIFIED oleh teknisi; label ini tidak otomatis berarti sebab kerusakan telah terbukti.
 3. Laporan/gejala dari pelanggan atau teknisi, dilabeli REPORTED.
@@ -103,6 +106,10 @@ Urutan sumber kebenaran:
 6. Data yang tidak tersedia tetap UNKNOWN; tidak diisi berdasarkan tebakan.
 
 Catatan: teknisi dapat salah mencatat atau mengukur. Aplikasi menyimpan sumber dan konteks agar hasil dapat ditinjau; urutan ini bukan jaminan bahwa setiap pengukuran benar.
+
+**Sumber kebenaran penyimpanan — OWNER TO DECIDE:** Opsi A: perangkat lokal otoritatif (offline-first, tetapi tidak otomatis pulih lintas perangkat). Opsi B: kebijakan konflik sinkronisasi ditentukan sebelum multi-perangkat/backend; status OPEN di ADR-008.
+
+**Opsi A — checklist/aturan:** USULAN, belum ada FR; tidak masuk MVP kecuali pemilik menambah FR dan AC.
 
 ## 6. Alur diagnosis (hanya setelah gerbang AI disetujui)
 
@@ -126,7 +133,7 @@ Catatan: teknisi dapat salah mencatat atau mengukur. Aplikasi menyimpan sumber d
   - rationale
   - supporting_evidence[]
   - contradicting_evidence[]
-  - confidence_label (LOW/MEDIUM/HIGH; aturan turunan, bukan output bebas model)
+  - evidence_summary (jumlah pengukuran mendukung/bertentangan/belum diperiksa; PROPOSED, bukan output bebas model)
   - verification_steps[]
   - required_tools[]
   - risk_level
@@ -138,17 +145,9 @@ Catatan: teknisi dapat salah mencatat atau mengukur. Aplikasi menyimpan sumber d
 - limitations[]
 - next_action
 
-### Aturan confidence yang diusulkan [REVISI AUDIT 2026-10-17]
+### Ringkasan bukti yang diusulkan [REVISI AUDIT 2026-10-17 B2]
 
-Status: PROPOSED — perlu persetujuan pemilik dan validasi pada SPIKE-01.
-
-- LOW jika belum ada pengukuran yang relevan, bukti utama hanya laporan gejala, atau bukti saling bertentangan.
-- MEDIUM hanya dapat dipertimbangkan jika ada pengukuran/pemeriksaan relevan yang mendukung hipotesis dan belum ada bukti penting yang bertentangan.
-- HIGH tidak digunakan pada MVP sampai ada rubrik penilaian yang ditinjau teknisi berpengalaman dan pemilik menyetujuinya.
-- Model AI boleh mengusulkan hipotesis dan alasan, tetapi tidak boleh menentukan atau menaikkan confidence_label. Sistem menurunkan label dari bukti yang tercatat dan aturan yang disetujui.
-- Jika sistem belum dapat menilai relevansi/kualitas bukti secara deterministik, gunakan LOW dan jelaskan keterbatasannya.
-
-Tidak ada angka ambang atau target metrik yang ditetapkan oleh dokumen ini. Nilai target: OWNER TO DECIDE.
+Status: PROPOSED; belum dipilih pemilik. Keluaran merangkum jumlah pengukuran mendukung, bertentangan, dan belum diperiksa. Model tidak memilih label confidence. Label LOW/MEDIUM/HIGH opsional dan tidak dipilih model. Jangan mengarang hitungan atau menyebut ringkasan bukti sebagai probabilitas. Nilai/ambang: OWNER TO DECIDE.
 
 ## 8. Keamanan dan privasi
 
