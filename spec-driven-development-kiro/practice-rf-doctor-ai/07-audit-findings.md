@@ -42,6 +42,8 @@ Ruang lingkup: dokumen Markdown di folder practice-rf-doctor-ai.
 | AUD-32 (M5) | Sanitizer perlu pola email/NIK dan aturan Luhn yang aman. | HIGH | 02, 05 | DIREVISI; implementasi belum ada |
 | AUD-33 (M6) | Laporan perlu membedakan pemeriksaan dokumen dari uji nyata. | MEDIUM | 07, 04 | Tes nyata belum dilakukan |
 
+Jumlah kasus SPIKE-01: 10-15 USULAN; OWNER TO CONFIRM. Ambang lulus harus disepakati sebelum hasil dilihat.
+
 ## Terverifikasi aman [REVISI AUDIT 2026-10-17 B2]
 
 - Rujukan ADR harus cocok dengan ID yang tercatat di 06-decision-log.md; konsistensi otomatis pascaperubahan perlu diperiksa.
