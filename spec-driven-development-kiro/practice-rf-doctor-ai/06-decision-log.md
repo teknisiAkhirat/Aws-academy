@@ -1,14 +1,20 @@
 # Decision Log — RF Doctor AI
 
-> [REVISI AUDIT 2026-10-17] Semua keputusan arsitektur di bawah tetap PROPOSED atau OPEN sampai pemilik memilih secara eksplisit.
+> [REVISI AUDIT 2026-10-17 B2] Semua keputusan arsitektur di bawah tetap PROPOSED atau OPEN sampai pemilik memilih secara eksplisit.
 
-Status: DRAFT / INITIAL  
-Gunakan format: konteks → opsi → keputusan → konsekuensi. Keputusan yang belum disetujui tidak boleh dianggap final.
+Status: DRAFT / INITIAL
+
+**Kosakata status:** OPEN = belum ada usulan/opsi yang cukup; PROPOSED = usulan menunggu pemilik; ACCEPTED = diterima eksplisit pemilik; REJECTED = ditolak eksplisit; SUPERSEDED = digantikan keputusan baru. Jangan mengubah status menjadi ACCEPTED/APPROVED tanpa bukti persetujuan.
+
+**Catatan ID:** ADR-009 adalah isi ADR-008 lama; ID dipertahankan. ADR baru berikutnya ADR-012 dan seterusnya.
+
+Gunakan format: konteks → opsi → keputusan → konsekuensi.
 
 ## ADR-001 — Platform aplikasi
 
-- Status: PROPOSED / OWNER TO DECIDE.
+- Status: OPEN / OWNER TO DECIDE.
 - Konteks: pemilik bekerja mobile-first dari HP melalui Termux, punya Oracle VPS, dan sudah memiliki aplikasi Flutter offline-first.
+- Opsi 0 — tanpa aplikasi kustom dulu (UNCONFIRMED): spreadsheet/Markdown lokal + template prompt. Kelebihan: setup berpotensi ringan; kekurangan: alur manual dan privasi tetap harus dijaga. Belum diuji.
 - Opsi yang dipertimbangkan:
   - Kotlin native + Jetpack Compose. Kelebihan: akses API Android dan pola native. Kekurangan: build/toolchain dari HP harus diuji; berpotensi lebih berat untuk setup.
   - Flutter. Kelebihan: pemilik sudah punya pengalaman/kode aplikasi Flutter offline-first dan dapat memakai ulang pola UI/data jika cocok. Kekurangan: reuse tidak boleh diasumsikan sebelum codebase diperiksa; plugin dan build tetap harus diuji.
@@ -85,11 +91,11 @@ Gunakan format: konteks → opsi → keputusan → konsekuensi. Keputusan yang b
 - Keputusan: belum dipilih; usulan offline-first tidak mengikat pemilik.
 - OWNER TO DECIDE: strategi lokal, backup, dan sinkronisasi.
 
-## ADR-009 — Source of truth and safety (ADR-008 lama)
+## ADR-009 — Aturan sumber kebenaran dan keselamatan diagnosis
 
 - Status: PROPOSED.
 - Konteks: diagnosis teknis dapat merugikan perangkat jika AI mengarang langkah atau komponen.
-- Keputusan usulan: pisahkan fakta, laporan, hipotesis, dan hasil verifikasi; sumber harus berasal dari retrieval aktual; confidence diturunkan dari aturan bukti yang disetujui, bukan dipilih model.
+- Usulan: pisahkan TERUKUR, DILAPORKAN, DUGAAN, TERVERIFIKASI; status KB berbeda dari status observasi dan penyebab terkonfirmasi. Ringkasan bukti (jumlah pengukuran mendukung/bertentangan/belum diperiksa) PROPOSED; label LOW/MEDIUM/HIGH opsional dan tidak dipilih model.
 - Konsekuensi: perlu validasi output dan benchmark kasus yang ditinjau teknisi/pemilik.
 
 ## ADR-010 — Lingkungan build
@@ -101,11 +107,36 @@ Gunakan format: konteks → opsi → keputusan → konsekuensi. Keputusan yang b
 - OWNER TO DECIDE: jalur build utama dan fallback.
 - Tidak ada instalasi, perubahan VPS, secret, atau biaya yang dilakukan tanpa izin.
 
-## ADR-011 — Batas biaya bulanan dan metrik keberhasilan
+## ADR-011 — Batas biaya bulanan
 
 - Status: OPEN / OWNER TO DECIDE.
-- Konteks: biaya AI, backend, storage, build, dan konektivitas belum diketahui; nilai produk juga belum dibuktikan.
+- Konteks: biaya AI, backend, storage, build, dan konektivitas belum diketahui.
 - Opsi: tidak ada layanan berbayar; hanya layanan gratis dengan batas penggunaan; atau biaya berbayar dengan hard cap dan persetujuan pemilik.
 - OWNER TO DECIDE: batas biaya bulanan = nominal belum ditetapkan.
-- OWNER TO DECIDE: jumlah kasus evaluasi, target keberhasilan top-3, target waktu per kasus, dan rubrik SPIKE-01.
+- Metrik dan kriteria keberhasilan mengacu ke 02-requirements.md; ADR-011 hanya mengatur biaya.
 - Konsekuensi: tidak boleh mengaktifkan billing atau memilih target angka atas nama pemilik.
+
+
+## ADR-012 — Lokasi dan format knowledge base serta data kasus [REVISI AUDIT 2026-10-17 B2]
+
+- Status: OPEN / OWNER TO DECIDE.
+- Konteks: repo Aws-academy ini PUBLIK; catatan servis (mentah maupun anonim), isi KB, kasus SPIKE, dan output model tidak boleh masuk ke repo.
+- Opsi:
+  - Folder lokal di luar repo. Kelebihan: tidak terpublikasi melalui Git; kekurangan: backup/akses lintas perangkat perlu diatur.
+  - Repo privat terpisah. Kelebihan: versioning dan review akses; kekurangan: perlu kontrol izin dan risiko perubahan visibilitas.
+  - Dibundel dalam aplikasi. Kelebihan: dapat tersedia offline; kekurangan: perlu izin distribusi, pembaruan, dan perlindungan data kasus.
+- Format kandidat: Markdown atau JSON; belum dipilih.
+- Risiko repo publik: riwayat Git/fork dapat mempertahankan data yang terlanjur dipublikasikan; jangan commit data meski sudah dianonimkan.
+- Izin penggunaan: setiap sumber harus memiliki asal-usul dan izin penggunaan/distribusi jelas. Pemilik menganonimkan catatan sebelum memberikannya ke layanan AI.
+- OWNER TO DECIDE: lokasi, format final, akses, dan aturan penggunaan/distribusi.
+
+## ADR-013 — Backup, restore, retensi, dan penghapusan data lokal [REVISI AUDIT 2026-10-17 B2]
+
+- Status: OPEN / OWNER TO DECIDE.
+- Konteks: kehilangan perangkat/data atau penghapusan keliru dapat menghilangkan riwayat. Retensi berlaku sejak Phase 1.
+- Opsi:
+  - Tanpa backup, risiko kehilangan data diterima eksplisit pemilik. Kelebihan: sederhana; kekurangan: kehilangan data dapat permanen.
+  - Ekspor manual terenkripsi. Kelebihan: kontrol lokal; kekurangan: pemilik harus menjaga file/kunci dan menguji restore.
+  - Backup ke cloud pribadi. Kelebihan: pemulihan lebih mudah; kekurangan: privasi, keamanan akun, biaya/kuota, dan izin akses perlu dinilai.
+- Penghapusan/arsip memerlukan konfirmasi yang jelas; retensi/pemulihan belum dipilih.
+- OWNER TO DECIDE: backup, retensi, restore, dan hapus permanen/arsip.
