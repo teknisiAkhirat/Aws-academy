@@ -1,9 +1,8 @@
 # RF Doctor AI — Dokumen Proyek
 
-> [REVISI AUDIT 2026-10-17] Status
+> [REVISI AUDIT 2026-10-17]
 > [REVISI AUDIT 2026-10-17 B2]
-
-Status, arah awal, dan indeks audit diperbarui.
+> Status, arah awal, dan indeks audit diperbarui.
 
 Status: **DISCOVERY / DRAFT — belum disetujui untuk implementasi**
 
