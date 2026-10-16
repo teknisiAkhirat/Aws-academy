@@ -144,3 +144,99 @@ Setelah task:
 
 ## Kondisi selesai
 Proyek tidak dianggap selesai hanya karena aplikasi bisa berjalan. Setiap requirement harus dapat ditelusuri ke design, task, dan test; semua klaim harus memiliki bukti; keterbatasan harus dinyatakan; dan pengguna harus memahami konsep yang dipraktikkan.
+
+
+---
+
+## Addendum — Terapkan kurikulum SDD secara menyeluruh dan gunakan executor berbasis ZIP
+
+Bagian ini memperluas alur implementasi di atas. Jika ada perbedaan dengan bagian implementasi sebelumnya, addendum ini yang berlaku untuk proyek password-vault.
+
+### Sasaran pembelajaran menyeluruh
+Jangan berhenti pada user stories, requirements, design, dan tasks. Terapkan seluruh materi yang relevan dari catatan AWS Academy/Kiro di repository pembelajaran, termasuk steering files, pengembangan bertahap, standar kualitas kode, refactoring, testing, dokumentasi, dan evaluasi hasil. Tutor harus merujuk file materi yang benar-benar ada di `spec-driven-development-kiro/`; catat materi mana yang diterapkan dan mana yang tidak relevan beserta alasannya. Jangan mengarang isi kurikulum atau menganggap setiap fitur Kiro tersedia di executor.
+
+### Tahapan dan artefak yang harus dipertimbangkan
+Jalankan secara berurutan dan adaptif. Tidak semua dokumen harus dibuat jika tidak relevan, tetapi keputusan untuk melewati artefak harus disertai alasan.
+
+1. **Orientasi dan audit baseline**
+   - Periksa `AGENTS.md`, `PROJECT_STATUS.md`, README, struktur repo, dependensi, test, workflow CI, konfigurasi deploy, branch/PR, dan perubahan yang belum selesai.
+   - Audit aturan dari `teknisiAkhirat/aturan-coding` dan materi pembelajaran AWS Academy.
+   - Bedakan fakta terverifikasi, asumsi, risiko, dan hal yang belum dapat diperiksa.
+   - Catat baseline commit/branch, kondisi awal, dan daftar temuan. Jangan mengubah kode pada tahap ini.
+
+2. **Product discovery dan problem framing**
+   - Wawancarai pengguna satu pertanyaan utama per giliran.
+   - Tetapkan pengguna, masalah, hasil yang diinginkan, konteks penggunaan, batasan, dan indikator keberhasilan.
+   - Buat `project-brief.md` atau `problem-statement.md` setelah hasilnya dirangkum dan disetujui.
+
+3. **Steering / pedoman proyek**
+   - Jelaskan bahwa steering adalah instruksi dan prinsip tetap yang membimbing AI selama bekerja.
+   - Susun dan minta persetujuan untuk artefak yang sesuai, misalnya:
+     - `.kiro/steering/product.md`: tujuan, pengguna, ruang lingkup, prinsip produk.
+     - `.kiro/steering/tech.md`: stack yang sudah diverifikasi, batasan teknis, integrasi.
+     - `.kiro/steering/structure.md`: pola direktori, arsitektur, konvensi penamaan.
+     - dokumen khusus keamanan, testing, code conventions, dan deployment bila dibutuhkan.
+   - Ikuti format dan lokasi yang benar-benar didukung repo/executor. Jika executor tidak mengenali folder `.kiro/steering/`, tetap sediakan Markdown netral dan petunjuk pemetaan, jangan berpura-pura steering otomatis aktif.
+   - Steering tidak boleh menggantikan requirements atau menyembunyikan keputusan yang belum disetujui.
+
+4. **Requirements dan spesifikasi fitur**
+   - Wawancarai pengguna secara bertahap; ajarkan user stories, acceptance criteria/EARS, prioritas, batasan, kebutuhan nonfungsional, error cases, dan scope MVP.
+   - Susun spesifikasi fitur, misalnya `requirements.md`, dengan ID unik agar bisa ditelusuri.
+   - Catat asumsi, pertanyaan terbuka, dan keputusan yang ditolak.
+   - Minta persetujuan eksplisit sebelum lanjut.
+
+5. **Design dan tinjauan risiko**
+   - Buat `design.md` yang meliputi arsitektur, aliran data, komponen, model data, antarmuka/API, penanganan error, integrasi, strategi testing, deployment, observability yang relevan, serta trade-off.
+   - Untuk password vault, lakukan threat modeling dan tinjau enkripsi, derivasi/pengelolaan kunci, autentikasi, otorisasi, sesi, pemulihan, data bocor ke log, XSS/CSRF, dan akses antar-pengguna.
+   - Tampilkan pilihan dan dampaknya dengan bahasa sederhana; pengguna memilih keputusan produk penting. Minta approval gate.
+
+6. **Rencana tugas**
+   - Buat `tasks.md` berisi tugas kecil, dependensi, requirement terkait, area/file yang mungkin berubah, test, kriteria selesai, dan bukti yang diharapkan.
+   - Pastikan traceability: setiap requirement terkait dengan design, task, dan test.
+   - Minta persetujuan sebelum implementasi.
+
+7. **Rencana verifikasi dan quality gates**
+   - Tetapkan test strategy: unit, integration, end-to-end bila sesuai, lint, typecheck, build, security checks, accessibility, dan regression tests berdasarkan stack nyata.
+   - Tentukan test yang wajib lulus sebelum paket dianggap siap.
+   - Sediakan matriks requirement → test → bukti.
+   - Jangan menyebut test berhasil jika executor tidak benar-benar menjalankannya.
+
+8. **Refinement sebelum coding (wajib)**
+   - Setelah seluruh persiapan dan sebelum executor menulis kode, tunjukkan ringkasan paket persiapan kepada pengguna.
+   - Tanyakan apakah ada perubahan, ambiguitas, atau keputusan yang belum tepat. Ini adalah sesi tanya-jawab final, bukan formalitas.
+   - Jika ada jawaban baru, perbarui steering/spec/design/tasks dan ulangi review artefak yang terdampak.
+   - Minta persetujuan eksplisit untuk memulai coding dan menyebutkan versi artefak yang disetujui.
+   - Tanpa persetujuan itu, executor tidak boleh mengubah kode.
+
+9. **Eksekusi kode oleh Gemini 4 Argon**
+   - Model/executor yang ditetapkan pengguna adalah **Gemini 4 Argon**. Jangan menggantinya diam-diam dengan model lain. Jika executor tersebut tidak tersedia di lingkungan yang digunakan, jelaskan keterbatasannya dan minta arahan.
+   - Executor menerima satu paket handoff yang mencakup steering, brief, requirements, design, tasks, quality gates, coding rules, dan audit baseline.
+   - Kerjakan tugas mengikuti urutan dan scope yang disetujui. Jangan mengarang kebutuhan baru atau memperluas scope tanpa bertanya.
+   - Terapkan perubahan secara konsisten, jalankan pemeriksaan yang tersedia, tinjau diff, lakukan refactoring jika diperlukan, dan update dokumentasi serta task status.
+   - Untuk setiap klaim, sertakan bukti konkret. Yang tidak dijalankan diberi label `NOT RUN` atau `UNCONFIRMED`.
+
+10. **Paket keluaran ZIP untuk unggah manual**
+    - Executor menyiapkan arsip `.zip` yang berisi hasil kerja dan struktur direktori yang dapat diunggah pengguna ke GitHub secara manual.
+    - ZIP harus menyertakan kode yang diperlukan, artefak SDD/steering yang diperbarui, ringkasan perubahan, laporan test dengan status nyata, dan instruksi singkat untuk meninjau serta mengunggah.
+    - Sertakan `CHANGELOG` atau `IMPLEMENTATION-REPORT.md`, `TEST-REPORT.md`, dan `MANUAL-UPLOAD.md` jika sesuai.
+    - Jangan sertakan `.env`, token, kunci, credential, cache, `node_modules`, build output yang tidak diperlukan, file sementara, atau data vault asli. Gunakan `.env.example` tanpa rahasia jika memang dibutuhkan.
+    - Sertakan daftar file dalam ZIP dan SHA-256 arsip jika dapat dibuat oleh executor.
+    - Jangan menyertakan folder `.git` kecuali pengguna secara eksplisit memintanya; pengguna akan mengunggah perubahan secara manual.
+    - Jangan push, commit ke GitHub, membuka PR, merge, atau deploy. Alur ini memakai penyerahan ZIP dan unggah manual oleh pengguna.
+    - Jangan menyebut paket “production-ready” hanya karena ZIP berhasil dibuat. Laporkan status setiap quality gate secara jujur.
+
+11. **Review pembelajaran dan penutupan**
+    - Jelaskan perubahan utama, konsep yang dipraktikkan, keputusan penting, hasil test, keterbatasan, risiko tersisa, dan apa yang dipelajari.
+    - Pastikan pengguna dapat menghubungkan requirements → design → tasks → implementasi → test/evidence.
+    - Buat daftar langkah manual setelah ZIP diterima. Berhenti untuk review pengguna sebelum siklus berikutnya.
+
+### Berkas handoff executor
+Gunakan `projects/password-vault/EXECUTOR-HANDOFF.md` sebagai instruksi khusus untuk Gemini 4 Argon. Sesuaikan dokumen itu dengan temuan repository aktual dan versi artefak yang telah disetujui. Jangan mengirim rahasia atau data vault nyata ke executor.
+
+### Aturan interaksi tetap
+- AI tutor memfasilitasi wawancara dan mengajarkan konsep; executor coding bukan pemilik keputusan produk.
+- Ajukan satu pertanyaan utama setiap giliran dan tunggu jawaban.
+- Jangan mengarang keputusan atas nama pengguna.
+- Persetujuan satu fase bukan persetujuan untuk semua fase berikutnya.
+- Pengguna harus menyetujui persiapan final sebelum coding.
+- Jalur keluaran proyek ini adalah ZIP untuk unggah manual ke GitHub, bukan push otomatis.
