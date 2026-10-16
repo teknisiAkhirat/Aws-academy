@@ -97,8 +97,7 @@ Pola minimum yang wajib dicoba oleh implementasi:
 - Nomor ponsel Indonesia: normalisasi spasi/tanda hubung, lalu coba pola kandidat yang diawali +628, 628, atau 08; untuk bentuk tanpa kode negara, awalan seluler dimulai 08. Panjang dan variasi operator harus diuji dengan fixture sintetis sebelum pola dianggap cukup.
 - ICCID: coba kandidat digit berurutan yang dimulai 89 dan memiliki 19 atau 20 digit total, dengan batas angka di kedua sisi. Format/variasi nyata harus diverifikasi sebelum implementasi menganggap pola ini lengkap.
 - IMSI juga termasuk identifier sensitif dan harus diminimalkan/dibuang bila ditemukan, tetapi pola lengkap perlu divalidasi sebelum implementasi.
-
-Email: pola kandidat alamat email lokal@domain dengan fixture sintetis positif/negatif.
+- Email: pola kandidat alamat email lokal@domain dengan fixture sintetis positif/negatif.
 - NIK: kandidat 16 digit dengan batas digit di kedua sisi; bisa salah cocok sehingga wajib dianggap kandidat.
 - Luhn untuk IMEI/ICCID boleh menambah keyakinan deteksi, tetapi kegagalan Luhn tidak boleh melonggarkan pembuangan/penandaan.
 
@@ -173,16 +172,16 @@ Kelas: DETERMINISTIK, VALIDATOR, BENCHMARK-MANUAL, PERANGKAT. Klasifikasi/fase/p
 | AC-10 | BENCHMARK-MANUAL | P1 | MUST (PROPOSED) |
 | AC-11 | BENCHMARK-MANUAL | P1 | MUST (PROPOSED) |
 | AC-12 | BENCHMARK-MANUAL | P1 | MUST (PROPOSED) |
-| AC-13 | DETERMINISTIK | P1 | MUST (PROPOSED) |
+| AC-13 | DETERMINISTIK | P1 | SHOULD (PROPOSED) |
 | AC-14 | BENCHMARK-MANUAL | P1/P2 | MUST (PROPOSED) |
 | AC-15 | BENCHMARK-MANUAL | P2 | MUST (PROPOSED) |
 | AC-16 | VALIDATOR | P2 | SHOULD (PROPOSED) |
 | AC-17 | DETERMINISTIK | P1 | MUST (PROPOSED) |
-| AC-18 | DETERMINISTIK | P1 | MUST (PROPOSED) |
+| AC-18 | DETERMINISTIK | P1 | SHOULD (PROPOSED) |
 | AC-19 | DETERMINISTIK | P1 | MUST (PROPOSED) |
 | AC-20 | DETERMINISTIK | P2 | MUST (PROPOSED) |
 | AC-21 | DETERMINISTIK | P1 | MUST (PROPOSED) |
-| AC-22 | DETERMINISTIK | P2 | MUST (PROPOSED) |
+| AC-22 | DETERMINISTIK | P2 | SHOULD (PROPOSED) |
 | AC-23 | DETERMINISTIK | P1 | MUST (PROPOSED) |
 | AC-24 | DETERMINISTIK | P1 | MUST (PROPOSED) |
 | AC-25 | BENCHMARK-MANUAL | P1 | MUST (PROPOSED) |
@@ -190,7 +189,7 @@ Kelas: DETERMINISTIK, VALIDATOR, BENCHMARK-MANUAL, PERANGKAT. Klasifikasi/fase/p
 | AC-27 | DETERMINISTIK | P1/P2 | MUST (PROPOSED) |
 | AC-28 | BENCHMARK-MANUAL | P1 | MUST (PROPOSED) |
 | AC-29 | DETERMINISTIK | P1 | MUST (PROPOSED) |
-| AC-30 | DETERMINISTIK | P2 | SHOULD (PROPOSED) |
+| AC-30 | DETERMINISTIK | P2 | MUST (PROPOSED) |
 | AC-31 | DETERMINISTIK | P1 | COULD (PROPOSED) |
 | AC-32 | DETERMINISTIK | P1 | SHOULD (PROPOSED) |
 
@@ -214,10 +213,8 @@ Untuk AC-12: buat branch kerja; perubahan terfokus; jalankan pemeriksaan; catat 
 - Platform Android: Kotlin native, Flutter, PWA, atau modul aplikasi yang sudah ada — lihat ADR-001.
 - Auth provider/flow: OPEN — lihat ADR-007.
 - Penyimpanan lokal dan sinkronisasi: OPEN — lihat ADR-008.
-- Lokasi/format KB dan data kasus: OPEN — lihat ADR-012.
-- Backup, restore, retensi, dan penghapusan: OPEN — lihat ADR-013.
 - Lokasi/format knowledge base dan data kasus: OPEN — lihat ADR-012.
-- Backup, restore, retensi, penghapusan: OPEN — lihat ADR-013.
+- Backup, restore, retensi, dan penghapusan: OPEN — lihat ADR-013.
 - Provider AI default: OPEN setelah SPIKE-01 dan benchmark.
 - Attachment/foto: OPEN; tidak termasuk fase awal kecuali disetujui.
 - Minimum Android API dan cara build: OPEN — lihat ADR-010.
