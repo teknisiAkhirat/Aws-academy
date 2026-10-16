@@ -77,7 +77,7 @@ Versi: 0.2
 - Verify/evidence: ADR dengan status dan konsekuensi.
 - Status: BLOCKED ON OWNER REVIEW.
 
-## Phase 1 — Android offline-only (BLOCKED sampai SPIKE-01 lulus)
+## Phase 1 — Offline-only tanpa AI (BLOCKED sampai SPIKE-01 dan persetujuan pemilik)
 
 ### APP-01 — Scaffold aplikasi
 - Size: M
