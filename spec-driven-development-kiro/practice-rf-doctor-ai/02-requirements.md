@@ -135,7 +135,7 @@ Fase dan prioritas berikut PROPOSED, belum disetujui pemilik. “AC kritis” be
 | NFR-05 | AC-08, AC-23 | P1/P2 | MUST |
 | NFR-06 | AC-02, AC-05, AC-20 | P1/P2 | MUST |
 | NFR-07 | AC-04, AC-14, AC-27 | P1/P2 | MUST |
-| NFR-08 | AC-10, AC-11, AC-28 | P1/P2 | MUST |
+| NFR-08 | AC-10, AC-11, AC-12, AC-28 | P1/P2 | MUST |
 | NFR-09 | AC-06, AC-29 | P1 | MUST |
 | NFR-10 | AC-32 | P1 | SHOULD |
 
