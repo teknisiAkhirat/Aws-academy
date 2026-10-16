@@ -1,9 +1,8 @@
 # System Design — RF Doctor AI
 
-> [REVISI AUDIT 2026-10-17] Rancangan
+> [REVISI AUDIT 2026-10-17]
 > [REVISI AUDIT 2026-10-17 B2]
-
-Rancangan ini masih usulan; tidak ada keputusan arsitektur final tanpa persetujuan pemilik.
+> Rancangan ini masih usulan; tidak ada keputusan arsitektur final tanpa persetujuan pemilik.
 
 Status: PROPOSED DESIGN — decisions pending owner review  
 Versi: 0.2
