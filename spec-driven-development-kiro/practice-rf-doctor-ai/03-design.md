@@ -181,6 +181,7 @@ Hindari logging payload pribadi. Evidence mencakup tes unit, kontrak API, benchm
 - Auth: lihat ADR-007.
 - Penyimpanan lokal/sinkronisasi: lihat ADR-008.
 - Provider AI: ADR-004, setelah SPIKE-01.
-- Knowledge storage dan izin: belum diputuskan.
+- Lokasi/format knowledge base dan izin penggunaan: OPEN — lihat ADR-012.
+- Backup, restore, retensi, dan penghapusan data lokal: OPEN — lihat ADR-013.
 - Minimum Android API/build tooling: lihat ADR-010.
 - Batas biaya bulanan: lihat ADR-011.
