@@ -7,7 +7,7 @@
 Status: INITIAL RESEARCH — belum menjadi bukti kelayakan akhir  
 Tanggal pemeriksaan dokumen: 2026-10-17
 
-## 1. Ringkasan
+## 1. Ringkasan [REVISI AUDIT 2026-10-17 B2]
 
 Proyek mungkin layak sebagai asisten pencatatan dan penalaran diagnosis, tetapi nilai inti belum terbukti dan knowledge base belum tersedia/ditinjau. Gerbang awal adalah SPIKE-01: SPIKE-01A (tanpa KB) dan SPIKE-01B (dengan KB setelah KB-01/ADR-012). Jumlah kasus: 10-15 USULAN; OWNER TO CONFIRM. Ambang lulus ditetapkan sebelum hasil dilihat; protokol ada di 08-spike-01-protocol.md.
 
