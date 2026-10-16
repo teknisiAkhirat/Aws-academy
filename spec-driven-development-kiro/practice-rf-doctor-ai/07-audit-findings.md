@@ -21,7 +21,6 @@ Ruang lingkup: dokumen Markdown di folder practice-rf-doctor-ai.
 | AUD-12 | Status README/steering sebelumnya dapat terbaca sebagai keputusan sudah disepakati, padahal banyak keputusan masih OPEN. | MEDIUM | README.md, 04-steering.md | DIREVISI — arah awal belum final dan steering menunggu persetujuan |
 | AUD-13 | Tidak ada batas biaya bulanan yang disetujui. | HIGH | 06-decision-log.md, 02-requirements.md | OPEN — ADR-011, OWNER TO DECIDE |
 | AUD-14 | Vercel dilaporkan membangun proyek audio-document-player pada PR dokumentasi. Tindakan yang diminta adalah pemeriksaan konfigurasi dashboard Vercel oleh pemilik; jangan mengubah konfigurasi melalui repository ini sebagai bagian audit RF Doctor AI. | MEDIUM | Di luar folder RF Doctor AI; konfigurasi dashboard Vercel | OPEN — tindakan pemilik di dashboard Vercel |
-
 | AUD-15 (B1) | Data operasional tidak boleh disimpan di repo publik. | BLOCKER | .gitignore, 04-steering.md, ADR-012 | DIREVISI; lokasi menunggu pemilik |
 | AUD-16 (B2) | Checklist/aturan dan sumber kebenaran penyimpanan perlu diperjelas. | HIGH | 03-design.md, ADR-008 | DIREVISI; pilihan OPEN |
 | AUD-17 (B3) | Backup, restore, retensi, dan penghapusan belum diputuskan. | HIGH | 02-requirements.md, ADR-013 | ADR-013 OPEN |
