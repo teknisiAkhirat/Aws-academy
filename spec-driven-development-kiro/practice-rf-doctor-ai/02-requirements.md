@@ -214,6 +214,8 @@ Untuk AC-12: buat branch kerja; perubahan terfokus; jalankan pemeriksaan; catat 
 - Platform Android: Kotlin native, Flutter, PWA, atau modul aplikasi yang sudah ada — lihat ADR-001.
 - Auth provider/flow: OPEN — lihat ADR-007.
 - Penyimpanan lokal dan sinkronisasi: OPEN — lihat ADR-008.
+- Lokasi/format knowledge base dan data kasus: OPEN — lihat ADR-012.
+- Backup, restore, retensi, penghapusan: OPEN — lihat ADR-013.
 - Provider AI default: OPEN setelah SPIKE-01 dan benchmark.
 - Attachment/foto: OPEN; tidak termasuk fase awal kecuali disetujui.
 - Minimum Android API dan cara build: OPEN — lihat ADR-010.
