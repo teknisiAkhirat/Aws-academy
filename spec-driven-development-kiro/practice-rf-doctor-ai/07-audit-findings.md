@@ -22,6 +22,26 @@ Ruang lingkup: dokumen Markdown di folder practice-rf-doctor-ai.
 | AUD-13 | Tidak ada batas biaya bulanan yang disetujui. | HIGH | 06-decision-log.md, 02-requirements.md | OPEN — ADR-011, OWNER TO DECIDE |
 | AUD-14 | Vercel dilaporkan membangun proyek audio-document-player pada PR dokumentasi. Tindakan yang diminta adalah pemeriksaan konfigurasi dashboard Vercel oleh pemilik; jangan mengubah konfigurasi melalui repository ini sebagai bagian audit RF Doctor AI. | MEDIUM | Di luar folder RF Doctor AI; konfigurasi dashboard Vercel | OPEN — tindakan pemilik di dashboard Vercel |
 
+| AUD-15 (B1) | Data operasional tidak boleh disimpan di repo publik. | BLOCKER | .gitignore, 04-steering.md, ADR-012 | DIREVISI; lokasi menunggu pemilik |
+| AUD-16 (B2) | Checklist/aturan dan sumber kebenaran penyimpanan perlu diperjelas. | HIGH | 03-design.md, ADR-008 | DIREVISI; pilihan OPEN |
+| AUD-17 (B3) | Backup, restore, retensi, dan penghapusan belum diputuskan. | HIGH | 02-requirements.md, ADR-013 | ADR-013 OPEN |
+| AUD-18 (B4) | Fase, prioritas, dan kelas AC perlu dinyatakan sebagai usulan. | HIGH | 02-requirements.md | DIREVISI; PROPOSED |
+| AUD-19 (B5) | Lokasi/format KB dan izin penggunaan perlu keputusan. | BLOCKER | 04-steering.md, ADR-012 | ADR-012 OPEN |
+| AUD-20 (H1) | SPIKE dipisah menjadi baseline tanpa KB dan putaran dengan KB. | BLOCKER | 01, 05, 08 | DIREVISI; belum dijalankan |
+| AUD-21 (H2) | AC perlu klasifikasi jenis uji. | MEDIUM | 02-requirements.md | DIREVISI; PROPOSED |
+| AUD-22 (H3) | Ringkasan bukti menggantikan pilihan confidence oleh model. | HIGH | 02, 03, 04, 06 | DIREVISI; PROPOSED |
+| AUD-23 (H4) | Status observasi, status KB, dan penyebab terkonfirmasi harus berbeda. | HIGH | 02-requirements.md, 03-design.md | DIREVISI; review perlu |
+| AUD-24 (H5) | String UI, matriks perangkat, dan AC-07/AC-30 perlu dipisah. | MEDIUM | 02-requirements.md | DIREVISI; matriks perangkat OWNER TO DECIDE |
+| AUD-25 (H6) | Status ADR dan opsi tanpa aplikasi kustom perlu eksplisit. | MEDIUM | 01, 06 | DIREVISI; ADR-001 OPEN |
+| AUD-26 (H7) | Task KB-02, sanitizer, backup/hapus, dan ADR-010 perlu konsisten. | HIGH | 05-task-breakdown.md | DIREVISI; task BLOCKED |
+| AUD-27 (H8) | Protokol SPIKE membutuhkan prompt A/B, rubrik, dan aturan privasi. | HIGH | 08-spike-01-protocol.md | DIREVISI; belum dijalankan |
+| AUD-28 (M1) | Charter harus menyebut Phase 1 offline tanpa AI. | MEDIUM | 00-project-charter.md | DIREVISI |
+| AUD-29 (M2) | Task persetujuan steering dan penanda audit belum tercatat. | LOW | 05-task-breakdown.md | DOC-06/DOC-07 ditambahkan |
+| AUD-30 (M3) | README perlu indeks protokol dan catatan repo publik. | MEDIUM | README.md, .gitignore | DIREVISI |
+| AUD-31 (M4) | Keterlacakan AC dan proses PR-only perlu konsisten. | MEDIUM | 02-requirements.md | DIREVISI; review perlu |
+| AUD-32 (M5) | Sanitizer perlu pola email/NIK dan aturan Luhn yang aman. | HIGH | 02, 05 | DIREVISI; implementasi belum ada |
+| AUD-33 (M6) | Laporan perlu membedakan pemeriksaan dokumen dari uji nyata. | MEDIUM | 07, 04 | Tes nyata belum dilakukan |
+
 ## Terverifikasi aman [REVISI AUDIT 2026-10-17 B2]
 
 - Rujukan ADR harus cocok dengan ID yang tercatat di 06-decision-log.md; konsistensi otomatis pascaperubahan perlu diperiksa.
