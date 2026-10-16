@@ -90,13 +90,13 @@ Teknisi HP yang menggunakan perangkat Android miliknya untuk menangani banyak pe
 
 ### Aturan sanitizer untuk AC-08 dan AC-23 [REVISI AUDIT 2026-10-17]
 
-Pola yang wajib dicoba oleh implementasi:
-- IMEI: rangkaian 15 digit berturut-turut.
-- Nomor telepon Indonesia: variasi umum yang diawali +62, 62, atau 0 dengan panjang digit yang sesuai pola telepon; implementasi perlu menghindari menghapus angka acak yang bukan nomor telepon.
-- ICCID: pola identifier kartu SIM berupa rangkaian digit panjang. Panjang dan format bisa berbeda; jangan menganggap satu regex mencakup semua ICCID.
+Pola minimum yang wajib dicoba oleh implementasi:
+- IMEI: tepat 15 digit berurutan, dengan batas yang memastikan rangkaian itu bukan bagian dari angka yang lebih panjang.
+- Nomor ponsel Indonesia: normalisasi spasi/tanda hubung, lalu coba pola kandidat yang diawali +628, 628, atau 08; untuk bentuk tanpa kode negara, awalan seluler dimulai 08. Panjang dan variasi operator harus diuji dengan fixture sintetis sebelum pola dianggap cukup.
+- ICCID: coba kandidat digit berurutan yang dimulai 89 dan memiliki 19 atau 20 digit total, dengan batas angka di kedua sisi. Format/variasi nyata harus diverifikasi sebelum implementasi menganggap pola ini lengkap.
 - IMSI juga termasuk identifier sensitif dan harus diminimalkan/dibuang bila ditemukan, tetapi pola lengkap perlu divalidasi sebelum implementasi.
 
-Fixture tes harus mencakup contoh sintetis positif, negatif, format dengan spasi/tanda hubung, dan teks campuran. Jangan gunakan identifier pelanggan nyata sebagai fixture. UI teks bebas menampilkan peringatan: “Jangan masukkan nama, nomor telepon, IMEI/IMSI/ICCID, atau data pelanggan. Pemeriksaan otomatis tidak menjamin semua data pribadi terhapus; periksa teks sebelum mengirim.” Sanitasi regex hanya lapisan pengurangan risiko, bukan jaminan anonimisasi.
+Fixture tes harus mencakup contoh sintetis positif dan negatif untuk tiap pola, termasuk bentuk dengan spasi/tanda hubung, prefiks internasional, angka lebih panjang yang tidak boleh salah dipotong, dan teks campuran. Jangan gunakan identifier pelanggan nyata sebagai fixture. Pola di atas adalah kandidat awal untuk pengujian, bukan jaminan dapat mendeteksi semua format. UI teks bebas menampilkan peringatan: “Jangan masukkan nama, nomor telepon, IMEI/IMSI/ICCID, atau data pelanggan. Pemeriksaan otomatis tidak menjamin semua data pribadi terhapus; periksa teks sebelum mengirim.” Sanitasi regex hanya lapisan pengurangan risiko, bukan jaminan anonimisasi.
 
 ## Matriks Keterlacakan [REVISI AUDIT 2026-10-17]
 
