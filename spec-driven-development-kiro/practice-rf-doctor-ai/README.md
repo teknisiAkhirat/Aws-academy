@@ -10,7 +10,7 @@ Status: **DISCOVERY / DRAFT — belum disetujui untuk implementasi**
 
 RF Doctor AI adalah calon asisten diagnosis untuk teknisi servis HP. Fokus awal yang diuji adalah masalah jaringan seluler, RX/TX, dan RF. Aplikasi mungkin membantu teknisi mengumpulkan gejala, mencatat hasil pemeriksaan, mencari referensi, dan menyusun langkah pemeriksaan yang dapat diverifikasi. Aplikasi tidak mengklaim dapat mengukur kondisi fisik komponen RF hanya melalui software.
 
-## Arah awal (belum final, lihat decision log) [REVISI AUDIT 2026-10-17]
+## Arah awal (belum final, lihat decision log) [REVISI AUDIT 2026-10-17 B2]
 
 - Pengguna yang dituju: teknisi yang memeriksa berbagai HP pelanggan.
 - Fokus uji awal: jaringan seluler, RX/TX, dan RF.
