@@ -33,6 +33,7 @@ Versi: 0.2
 ### ENV-01 — Validasi lingkungan build
 - Size: M
 - Requirements/AC: NFR-02, NFR-08; AC-11, AC-25, AC-28.
+- Dependency: ADR-010 (jalur build harus disetujui sebelum percobaan yang membutuhkan resource/akses).
 - Output: bukti percobaan build minimal untuk opsi yang dipertimbangkan: Termux, GitHub Actions, Oracle VPS, serta Flutter/Kotlin/PWA sejauh relevan.
 - Verify/evidence: perintah yang dijalankan, versi toolchain, hasil aktual, waktu, error lengkap yang tidak berisi secret, dan artefak build bila berhasil.
 - Batas: jangan instal resource berbayar atau ubah VPS produksi tanpa persetujuan.
