@@ -1,90 +1,127 @@
 # Riset Kelayakan — RF Doctor AI
 
-Status: INITIAL RESEARCH — sebagian perlu validasi melalui prototipe  
-Tanggal pemeriksaan: 2026-10-17
+> [REVISI AUDIT 2026-10-17] Klaim yang belum diuji pada lingkungan pemilik secara eksplisit ditandai UNCONFIRMED.
+
+Status: INITIAL RESEARCH — belum menjadi bukti kelayakan akhir  
+Tanggal pemeriksaan dokumen: 2026-10-17
 
 ## 1. Ringkasan
 
-Proyek layak sebagai **asisten pencatatan dan penalaran diagnosis**, bukan sebagai alat ukur RF langsung. API Android dapat menyediakan sebagian informasi sinyal yang dilaporkan sistem/modem. Pengukuran fisik pada antena, filter, PA, jalur PCB, dan IC RF tetap membutuhkan prosedur servis serta alat yang sesuai.
+Proyek mungkin layak sebagai asisten pencatatan dan penalaran diagnosis, tetapi nilai inti belum terbukti dan knowledge base belum tersedia/ditinjau. Gerbang awal adalah SPIKE-01: uji manual 10–15 kasus servis nyata yang sudah dianonimkan memakai format keluaran desain, lalu pemilik menilai manfaatnya.
 
-## 2. Android dan data jaringan
+Pengukuran fisik pada antena, filter, PA, jalur PCB, dan IC RF tetap membutuhkan prosedur servis serta alat yang sesuai. Aplikasi tidak boleh menyatakan dapat mengukur jalur RF fisik melalui software saja.
 
-Referensi:
+## 2. Android dan data jaringan — POST-MVP, tidak dipakai MVP (FR-15, ADR-005) [REVISI AUDIT 2026-10-17]
+
+Bagian ini hanya catatan untuk kemungkinan fase berikutnya; bukan scope MVP offline-only.
+
+Referensi resmi:
 - TelephonyManager: https://developer.android.com/reference/android/telephony/TelephonyManager
 - CellSignalStrengthLte: https://developer.android.com/reference/android/telephony/CellSignalStrengthLte
 - CellSignalStrengthNr: https://developer.android.com/reference/android/telephony/CellSignalStrengthNr
 - Android permissions overview: https://developer.android.com/guide/topics/permissions/overview
 
-Temuan awal:
-- API Android menyediakan sejumlah nilai jaringan seperti RSRP, RSRQ, RSSNR, RSSI, dan metrik NR jika perangkat/API mendukungnya.
-- Nilai tertentu memiliki penanda UNAVAILABLE. Aplikasi harus mempertahankan status tersebut, bukan mengubahnya menjadi nol.
-- Ketersediaan data bergantung pada API level, permission, implementasi perangkat, modem, dan kondisi jaringan.
-- Aplikasi yang berjalan di HP teknisi tidak otomatis memperoleh telephony data dari HP pelanggan yang terpisah. MVP memakai input manual; koneksi langsung ke perangkat pelanggan adalah riset terpisah.
-- Nilai sinyal yang dilaporkan perangkat bukan bukti tunggal kerusakan fisik RF.
+Temuan awal yang perlu diuji pada perangkat target:
+- Android menyediakan API untuk sebagian nilai jaringan, tetapi nilai yang tersedia bergantung pada API level, izin, perangkat, implementasi modem, dan kondisi jaringan.
+- Nilai UNAVAILABLE tidak boleh diubah menjadi nol.
+- Aplikasi di HP teknisi tidak otomatis membaca data telephony dari HP pelanggan yang terpisah.
+- Nilai yang dilaporkan modem bukan bukti tunggal kerusakan fisik RF.
 
-**Validasi sebelum implementasi:** buat matriks API level/perizinan dan uji pada perangkat Android nyata. Jangan menjanjikan semua metrik tersedia di semua perangkat.
+Status detail ketersediaan tiap metrik/izin di perangkat pemilik: UNCONFIRMED. Tidak ada penggunaan TelephonyManager di MVP.
 
-## 3. Backend dan penyimpanan
+## 3. Lingkungan build & alternatif platform [REVISI AUDIT 2026-10-17]
 
-Referensi:
+Kondisi pemilik yang menjadi input perbandingan:
+- Pengembangan sehari-hari mobile-first dari HP Android melalui Termux.
+- Pemilik memiliki Oracle VPS.
+- Pemilik sudah memiliki aplikasi Flutter offline-first.
+- Kemampuan dan kemudahan membangun APK langsung di perangkat pemilik belum dibuktikan untuk toolchain yang dipilih.
+
+Semua penilaian kecocokan di bawah adalah HIPOTESIS / UNCONFIRMED sampai ENV-01 menjalankan build nyata.
+
+| Opsi | Potensi kelebihan | Potensi kekurangan/risiko | Status |
+|---|---|---|---|
+| Kotlin native + Jetpack Compose | API Android native dan integrasi platform langsung | Toolchain Android/Gradle/JDK/SDK di Termux perlu diuji; build lokal dari HP tidak boleh diasumsikan berhasil | UNCONFIRMED |
+| Flutter | Pemilik sudah memiliki aplikasi Flutter offline-first; kemungkinan penggunaan ulang pengetahuan dan pola lokal | Kesesuaian codebase yang ada, versi Flutter/Dart, plugin, dan build APK pada lingkungan pemilik perlu diuji | UNCONFIRMED |
+| PWA (web app yang dapat dipasang dari browser) | Potensi paling sederhana untuk workflow berbasis browser dan backend web | Batas akses hardware/native, pengalaman offline, dan kebutuhan distribusi APK perlu dibandingkan dengan kebutuhan MVP | UNCONFIRMED |
+| Memperluas modul/aplikasi yang sudah ada | Bisa menghindari proyek baru jika arsitektur dan lisensinya cocok | Risiko mencampur scope, dependensi, dan perilaku aplikasi lama; harus audit codebase sebelum memilih | UNCONFIRMED |
+
+### Jalur build yang perlu diuji
+
+1. Build di Termux langsung: UNCONFIRMED untuk tiap opsi; jangan menganggap Android SDK/Gradle/JDK akan terpasang dan berjalan tanpa kendala.
+2. GitHub Actions: secara umum dapat menjalankan workflow CI yang didefinisikan dalam repository, tetapi workflow Android untuk proyek ini, versi toolchain, artefak APK, dan kebutuhan secret belum diuji. Status proyek: UNCONFIRMED.
+3. Oracle VPS: kemungkinan menjadi runner/build host jika OS, arsitektur, ruang disk, RAM, dependensi, dan akses jaringan cocok; build Android pada VPS ini belum diuji. Status: UNCONFIRMED.
+4. Build Flutter dari environment lain lalu mengunduh APK ke HP: perlu uji apakah alur ini praktis bagi pemilik. Status: UNCONFIRMED.
+
+Sumber resmi untuk investigasi (bukan bukti bahwa build telah berhasil):
+- Android build overview: https://developer.android.com/build
+- Android Gradle plugin release notes/compatibility: https://developer.android.com/build/releases/gradle-plugin
+- Kotlin Android: https://kotlinlang.org/docs/android-overview.html
+- Flutter install: https://docs.flutter.dev/get-started/install
+- Flutter deployment Android: https://docs.flutter.dev/deployment/android
+- GitHub Actions documentation: https://docs.github.com/actions
+- Termux project repository: https://github.com/termux/termux-app
+- Oracle Cloud Infrastructure documentation: https://docs.oracle.com/en-us/iaas/
+
+Tidak ada klaim bahwa platform tertentu pasti paling mudah atau bahwa VPS/Actions telah dikonfigurasi. ENV-01 wajib menguji pilihan dengan bukti sebelum platform final dipilih.
+
+## 4. Backend dan penyimpanan — ditunda sampai gerbang
+
+Sumber resmi:
 - Cloudflare Workers pricing: https://developers.cloudflare.com/workers/platform/pricing/
 - Cloudflare D1 pricing: https://developers.cloudflare.com/d1/platform/pricing/
 - Cloudflare D1 FAQ: https://developers.cloudflare.com/d1/reference/faq/
+- Supabase pricing: https://supabase.com/pricing
 
-Temuan awal:
-- Workers cocok dievaluasi sebagai API backend untuk mengamankan kredensial AI dan menerapkan validasi, batas penggunaan, dan logging.
-- D1 adalah database SQL yang memiliki tingkat gratis dengan batas penggunaan; jika batas gratis terlampaui, operasi dapat gagal sampai batas direset atau paket diubah.
-- Batas, harga, dan kuota harus diperiksa kembali pada saat deployment.
-- Kunci API model tidak boleh ditanamkan di APK. APK dapat diperiksa dan kredensial yang disisipkan dapat diekstrak.
+Workers dapat dievaluasi sebagai API server-side; D1 adalah kandidat database. Supabase juga merupakan opsi yang perlu dibandingkan dengan kebutuhan nyata dan resource yang sudah ada. Harga, batas gratis, biaya egress, backup, dan kebutuhan operasional harus diverifikasi pada saat keputusan. Status konfigurasi serta biaya untuk proyek ini: UNCONFIRMED.
 
-## 4. Pilihan AI
+Tidak ada backend, database, deployment, atau billing yang dibuat oleh dokumen ini.
 
-Referensi:
+## 5. Pilihan AI — ditunda sampai SPIKE-01
+
+Sumber resmi:
 - Cloudflare Workers AI pricing: https://developers.cloudflare.com/workers-ai/platform/pricing/
 - Gemini Developer API pricing and data terms: https://ai.google.dev/gemini-api/docs/pricing
 
-Temuan yang terlihat saat riset:
-- Workers AI mendokumentasikan alokasi 10.000 Neurons per hari untuk tingkat gratis; model tertentu mensyaratkan metode pembayaran, dan batas dapat menyebabkan permintaan gagal.
-- Gemini API mendokumentasikan free tier untuk model tertentu, tetapi tabel pricing menyatakan konten pada free tier dapat digunakan untuk meningkatkan produk. Ini perlu diperhatikan untuk data servis.
-- Karena kebijakan, model, kuota, dan harga berubah, jangan mengunci provider hanya berdasarkan nama model atau klaim “gratis”.
-- Rekomendasi desain: buat adapter provider di backend, lalu evaluasi model melalui benchmark kasus diagnosis sebelum menentukan default.
+Harga, kuota, model yang tersedia, aturan penggunaan data, dan kinerja bahasa Indonesia dapat berubah. Semua perbandingan kualitas untuk diagnosis servis belum diuji. Jangan mengirim data pelanggan ke model selama eksperimen; gunakan kasus yang telah dianonimkan dan periksa kembali hasil sanitasi.
 
-**Kriteria benchmark:** validitas struktur output, kepatuhan terhadap sumber, kalibrasi ketidakpastian, kualitas langkah pemeriksaan, latensi, batas permintaan, dan biaya per kasus. Model tidak dinilai hanya berdasarkan kelancaran bahasa.
+Provider default: OPEN. Benchmark harus menilai sumber, ketidakpastian, langkah verifikasi, validitas struktur, latensi, batas penggunaan, privasi, dan biaya per kasus.
 
-## 5. Basis pengetahuan
+## 6. Basis pengetahuan
 
-MVP sebaiknya dimulai dengan dokumen teknis terstruktur dan pencarian teks sederhana. RAG (retrieval-augmented generation) berarti mengambil bagian dokumen relevan sebelum meminta AI menjawab. Pencarian vektor belum wajib untuk dataset awal.
+Saat ini nilai inti dan isi knowledge base belum terbukti. Mulai dari catatan servis milik pemilik yang boleh digunakan, dianonimkan, serta memiliki metadata asal-usul. Jangan mengasumsikan catatan yang ada cukup untuk diagnosis.
 
-Setiap sumber perlu metadata:
-- judul dan penerbit/pemilik;
-- URL atau lokasi sumber;
-- tanggal diakses;
-- lisensi/izin penggunaan;
-- perangkat/model yang berlaku;
-- status: DRAFT, REVIEWED, VERIFIED, atau RETIRED;
-- reviewer dan tanggal verifikasi.
+Metadata minimal:
+- ID sumber;
+- judul/catatan;
+- merek/model/perangkat yang relevan bila diketahui;
+- tanggal catatan;
+- sumber asal dan izin penggunaan;
+- gejala, bukti, langkah pemeriksaan, temuan akhir;
+- status REVIEW NEEDED / REVIEWED / VERIFIED / RETIRED;
+- siapa yang meninjau dan tanggal review.
 
-Skema, boardview, dan materi servis hanya boleh dimasukkan jika penggunaan serta distribusinya sah. Jangan mengunggah dokumen berhak cipta ke layanan AI tanpa hak atau dasar yang sesuai.
+Skema/boardview atau materi pihak ketiga hanya boleh digunakan jika izin pemakaian dan distribusinya jelas.
 
-## 6. Keamanan dan privasi
+## 7. Keamanan dan privasi
 
-- Jangan kirim IMEI, nomor telepon, ICCID, IMSI, nama pelanggan, atau data identitas yang tidak dibutuhkan ke model AI.
-- Gunakan ID kasus internal acak; jangan menjadikan IMEI sebagai primary key.
-- Jangan simpan data pribadi pelanggan di log aplikasi/backend.
-- Kredensial provider hanya berada di secret store backend.
-- Endpoint diagnosis harus memiliki autentikasi, pembatasan laju, validasi input, dan batas ukuran payload.
-- Mekanisme autentikasi pengguna masih TBD dan harus diputuskan sebelum endpoint publik dibuat.
-- Data diagnosis dapat berisi informasi usaha/pelanggan; tentukan kebijakan retensi dan penghapusan sebelum pilot.
+- Jangan mengirim IMEI, IMSI, ICCID, nomor telepon, nama pelanggan, atau identitas yang tidak diperlukan ke AI.
+- Gunakan ID kasus internal; jangan gunakan IMEI sebagai primary key.
+- Sanitasi otomatis hanya pengurangan risiko dan tidak menjamin semua data pribadi tertangkap.
+- Kunci provider harus berada di secret store backend jika backend AI kelak disetujui.
+- Endpoint publik wajib memiliki autentikasi, validasi, pembatasan laju, dan batas ukuran request.
+- Kebijakan retensi, backup, ekspor, dan penghapusan perlu disetujui sebelum pilot.
 
-## 7. Risiko yang belum terjawab
+## 8. Risiko yang belum terjawab
 
-1. Model AI mana yang paling baik untuk bahasa Indonesia dan diagnosis teknis?
-2. Bagaimana autentikasi pengguna yang sederhana tetapi aman untuk aplikasi Android dan Cloudflare Worker?
-3. Apakah catatan kasus harus offline-first dengan Room, atau cukup penyimpanan online pada tahap awal?
-4. Referensi teknis legal apa yang tersedia untuk model HP yang sering diservis?
-5. Apa format kasus uji yang bisa dinilai oleh teknisi berpengalaman?
-6. Bagaimana melakukan backup/export tanpa menyimpan data pelanggan yang berlebihan?
+1. Apakah keluaran AI benar-benar membantu pada 10–15 kasus servis nyata anonim?
+2. Platform apa yang paling realistis untuk workflow pemilik dari HP?
+3. Apakah perlu backend sama sekali setelah uji manual?
+4. Strategi autentikasi dan sinkronisasi apa yang sesuai jika backend dipilih?
+5. Catatan servis mana yang boleh dimasukkan ke knowledge base dan bagaimana menilainya?
+6. Provider AI mana yang sesuai dari segi kualitas, privasi, dan batas biaya?
+7. Bagaimana backup/export dilakukan tanpa mengumpulkan data pelanggan yang tidak diperlukan?
 
-## 8. Kesimpulan
+## 9. Kesimpulan
 
-Lanjutkan ke review requirements dan desain, bukan langsung coding. Semua keputusan yang terkait autentikasi, penyimpanan offline, provider AI, dan sumber pengetahuan perlu ditutup sebelum implementasi fitur terkait.
+Jangan mulai backend atau integrasi TelephonyManager sekarang. Jalankan SPIKE-01 dan ENV-01, susun knowledge base dari catatan pemilik, lalu minta pemilik memutuskan apakah nilai produk terbukti dan platform mana yang akan digunakan. Semua klaim build/performa yang belum diuji tetap UNCONFIRMED.
