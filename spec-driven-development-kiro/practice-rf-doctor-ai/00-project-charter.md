@@ -1,7 +1,7 @@
 # Project Charter — RF Doctor AI
 
 Status: DRAFT FOR REVIEW  
-Versi: 0.1  
+Versi: 0.2  
 Tanggal: 2026-10-17
 
 ## 1. Masalah
@@ -19,15 +19,9 @@ Membangun asisten teknisi yang membantu penalaran diagnosis jaringan seluler sec
 - Perangkat penggunaan: HP Android milik teknisi.
 - Perangkat yang didiagnosis: beragam HP pelanggan; aplikasi tidak menganggap dirinya memiliki akses otomatis ke data internal HP pelanggan.
 
-## 4. Sasaran MVP
+## 4. Sasaran MVP [REVISI AUDIT 2026-10-17 B2]
 
-1. Membuat dan mengelola kasus servis.
-2. Mencatat model/perangkat, gejala, konteks jaringan, dan pemeriksaan.
-3. Menyimpan pengukuran manual dengan satuan dan konteks yang jelas.
-4. Mengambil referensi teknis terkurasi yang relevan.
-5. Meminta AI menyusun hipotesis, alasan, ketidakpastian, dan langkah pemeriksaan berikutnya.
-6. Menyimpan temuan akhir dan hasil perbaikan.
-7. Menampilkan sumber referensi yang dipakai dalam jawaban.
+Phase 1 yang diusulkan adalah aplikasi offline tanpa AI: membuat/mengelola kasus, mencatat perangkat, gejala, konteks jaringan, pengukuran manual, temuan akhir, riwayat, pencarian lokal bila sumber berizin tersedia, dan ekspor sesuai requirements yang disetujui. AI, retrieval online, backend, dan sinkronisasi hanya dipertimbangkan setelah gerbang SPIKE dan persetujuan pemilik. Metrik/AC mengacu ke 02-requirements.md; target angka belum dipilih.
 
 ## 5. Bukan sasaran MVP
 
@@ -49,15 +43,12 @@ Membangun asisten teknisi yang membantu penalaran diagnosis jaringan seluler sec
 - Langkah berisiko tinggi harus disertai peringatan dan tidak boleh dijalankan otomatis.
 - Hasil diagnosis harus bisa ditinjau ulang dari riwayat bukti dan sumber.
 
-## 7. Ukuran keberhasilan awal
+## 7. Ukuran keberhasilan awal [REVISI AUDIT 2026-10-17 B2]
 
-- Teknisi dapat membuat dan menyimpan kasus tanpa meminta AI.
-- AI mengembalikan struktur jawaban yang valid dan menampilkan ketidakpastian.
-- Setiap klaim yang menggunakan basis pengetahuan memiliki sumber yang dapat dibuka.
-- Data yang tidak tersedia tidak ditampilkan sebagai nol atau nilai normal.
-- Tidak ada API key penyedia AI di APK.
-- Tes otomatis dan uji manual yang dilakukan dilaporkan dengan bukti; tes yang belum dilakukan ditandai UNCONFIRMED.
-- MVP diuji dengan kasus simulasi sebelum digunakan untuk diagnosis pelanggan nyata.
+- Phase 1: kasus lokal dapat dibuat dan dibuka kembali; data UNKNOWN tidak berubah menjadi nol.
+- AI hanya dipertimbangkan setelah SPIKE-01 dinilai pemilik dan kriteria lulus disepakati sebelum hasil dilihat.
+- Metrik dan target mengacu ke 02-requirements.md; angka/ambang: OWNER TO DECIDE.
+- Tes yang dijalankan dilaporkan dengan hasil aktual dan bukti; tes belum dilakukan berstatus UNCONFIRMED.
 
 ## 8. Batasan dan asumsi
 
