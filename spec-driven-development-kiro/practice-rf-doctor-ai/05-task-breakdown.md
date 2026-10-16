@@ -1,13 +1,13 @@
 # Task Breakdown — RF Doctor AI
 
-> [REVISI AUDIT 2026-10-17] Urutan fase diubah agar validasi nilai produk mendahului implementasi. Semua task implementasi tetap memerlukan persetujuan pemilik.
+> [REVISI AUDIT 2026-10-17 B2] Urutan fase diubah agar validasi nilai produk mendahului implementasi. Semua task implementasi tetap memerlukan persetujuan pemilik.
 
 Status: DRAFT BACKLOG — belum ada task implementasi yang diizinkan  
 Versi: 0.2
 
 ## Aturan
 
-- SPIKE-01 adalah gerbang nilai produk. Phase 1 dan semua fase setelahnya berstatus BLOCKED sampai SPIKE-01 selesai, hasil dinilai pemilik, dan pemilik memberi persetujuan eksplisit untuk lanjut.
+- SPIKE-01 adalah gerbang nilai produk. Phase 1 dan semua fase setelahnya BLOCKED sampai SPIKE-01A dan SPIKE-01B yang relevan selesai, hasil dinilai pemilik, dan pemilik menyetujui lanjut. Jumlah kasus: 10-15 USULAN; OWNER TO CONFIRM.
 - ENV-01 wajib dilakukan sebelum memilih platform/build path.
 - KB-01 menyusun pengetahuan dari catatan servis pemilik yang sah dipakai; jangan mengarang isi atau menganggap catatan belum ditinjau sebagai fakta terverifikasi.
 - Task yang memerlukan keputusan OPEN tidak boleh dikerjakan sampai keputusan itu ditutup.
@@ -45,15 +45,22 @@ Versi: 0.2
 - Verify/evidence: pemilik meninjau sampel; catatan tanpa asal-usul/izin atau yang belum ditinjau tidak ditandai VERIFIED.
 - Status: BLOCKED ON OWNER-PROVIDED NOTES AND REVIEW.
 
-### SPIKE-01 — Uji manual 10–15 kasus servis nyata yang anonim (GERBANG)
-- Size: L
-- Requirements/AC: FR-05..FR-09, FR-13; AC-04, AC-05, AC-09, AC-14, AC-15, AC-16.
-- Output: 10–15 kasus servis nyata yang sudah dianonimkan; jalankan prompt/format keluaran dari 03-design secara manual di chat AI; simpan input yang aman, keluaran, sumber yang disebut, dan penilaian pemilik.
-- Verify/evidence: pemilik menilai setiap kasus berdasarkan ketepatan fakta, hipotesis, ketidakpastian, sumber, risiko, dan langkah verifikasi; catat kasus gagal dan contoh hallucination.
-- Jangan mengirim identifier pelanggan atau materi yang tidak memiliki izin.
-- Kriteria lulus: OWNER TO DECIDE: rubrik dan ambang kelulusan.
-- Status: BLOCKED ON OWNER REVIEW; belum dikerjakan oleh agent.
-- Gate: Phase 1+ tetap BLOCKED sampai pemilik menyatakan SPIKE-01 lulus secara eksplisit.
+### SPIKE-01A — Uji manual tanpa KB
+- Size: M
+- Requirements/AC: FR-05..FR-08; AC-04, AC-15, AC-16.
+- Output: baseline tanpa referensi KB. Jumlah kasus: 10-15 USULAN; OWNER TO CONFIRM.
+- Verify/evidence: gunakan 08-spike-01-protocol.md; data/hasil di luar repo publik.
+- Dependency: tidak ada; dapat mulai kapan saja setelah pemilik menyiapkan kasus aman.
+- Status: BLOCKED ON OWNER PREPARATION; belum dilakukan.
+
+### SPIKE-01B — Uji manual dengan KB
+- Size: M
+- Requirements/AC: FR-05..FR-09, FR-13; AC-04, AC-14, AC-15, AC-16.
+- Output: ulangi kasus sama dengan catatan KB ber-ID yang diizinkan dan ditinjau; bandingkan dengan SPIKE-01A.
+- Verify/evidence: protokol 08; sitasi menunjuk ID yang benar-benar diberikan. Data/hasil di luar repo publik.
+- Dependency: KB-01 dan ADR-012.
+- Status: BLOCKED ON KB-01 + OWNER REVIEW; belum dilakukan.
+- Gate: Phase 1+ BLOCKED sampai pemilik menilai hasil dan menyetujui lanjut.
 
 ### DOC-03 — Tutup requirements
 - Size: M
@@ -76,7 +83,7 @@ Versi: 0.2
 - Requirements/AC: FR-01, FR-15; NFR-01, NFR-02, NFR-08; AC-01, AC-21, AC-24, AC-25, AC-28.
 - Output: aplikasi minimal dapat dibangun dan dibuka di perangkat target.
 - Verify/evidence: build log dan uji perangkat nyata.
-- Dependency: ENV-01 dan keputusan platform ADR-001.
+- Dependency: ENV-01, ADR-001, dan ADR-010.
 - Status: BLOCKED.
 
 ### APP-02 — Model kasus dan penyimpanan lokal
@@ -89,17 +96,42 @@ Versi: 0.2
 
 ### APP-03 — Form gejala, bukti, dan pengukuran
 - Size: M
-- Requirements/AC: FR-02, FR-03, FR-04, FR-07; NFR-01, NFR-05, NFR-06; AC-02, AC-03, AC-08, AC-13, AC-14.
-- Output: form mempertahankan UNKNOWN, satuan, metode, label sumber, dan peringatan privasi.
-- Verify/evidence: fixture valid/invalid dan screenshot uji.
+- Requirements/AC: FR-02, FR-03, FR-04, FR-07; NFR-01, NFR-05, NFR-06; AC-02, AC-03, AC-13, AC-14.
+- Output: form mempertahankan UNKNOWN, satuan, metode, label sumber, dan peringatan agar data mentah tidak dimasukkan ke layanan AI.
+- Verify/evidence: fixture valid/invalid dan uji perangkat.
 - Status: BLOCKED.
+
+### SAN-01 — Sanitizer dan fixture privasi
+- Size: M
+- Requirements/AC: NFR-05; AC-08, AC-23.
+- Output: sanitizer + fixture sintetis untuk IMEI, telepon, ICCID, IMSI, email, NIK. Luhn hanya sinyal tambahan, tidak melonggarkan pembuangan/penandaan.
+- Verify/evidence: tes positif/negatif, variasi pemisah, false-positive review, peringatan UI; tanpa data kasus nyata.
+- Dependency: sebelum APP-04 ekspor dan sebelum AI/provider mengirim data.
+- Status: BLOCKED; pengiriman AI Phase 2.
 
 ### APP-04 — Riwayat, pencarian lokal, dan ekspor
 - Size: M
-- Requirements/AC: FR-10, FR-11, FR-12, FR-13, FR-17; NFR-07, NFR-09; AC-09, AC-17, AC-18, AC-19, AC-23, AC-27, AC-29.
+- Requirements/AC: FR-10, FR-11, FR-12, FR-13, FR-17, FR-18; NFR-07, NFR-09, NFR-10; AC-09, AC-17, AC-18, AC-19, AC-23, AC-27, AC-29, AC-31, AC-32.
 - Output: riwayat kasus, pencarian knowledge lokal, dan ekspor tanpa identifier sensitif secara default.
 - Verify/evidence: tes urutan riwayat, pencarian, ekspor fixture, dan pemeriksaan data lokal.
+- Dependency: SAN-01 untuk ekspor; ADR-012 untuk registry/format KB; ADR-013 untuk backup/restore, hapus/arsip.
 - Status: BLOCKED.
+
+### KB-02 — Registry dan format knowledge lokal
+- Size: M
+- Requirements/AC: FR-12, FR-13; AC-09, AC-16, AC-19.
+- Output: Markdown/JSON + metadata registry; sumber berizin dengan ID/provenance/status REVIEW NEEDED/REVIEWED/VERIFIED/RETIRED. Isi KB di lokasi ADR-012, bukan repo publik.
+- Verify/evidence: placeholder di repo; uji dengan data sintetis atau lokasi privat disetujui.
+- Dependency: ADR-012 dan KB-01.
+- Status: BLOCKED ON OWNER DECISION.
+
+### DATA-01 — Backup/restore dan hapus/arsip lokal
+- Size: M
+- Requirements/AC: FR-18, NFR-10; AC-31, AC-32.
+- Output: konfirmasi hapus/arsip dan backup/restore sesuai ADR-013; retensi berlaku sejak Phase 1.
+- Verify/evidence: tes restore/hapus/arsip dengan fixture sintetis; tanpa backup hanya setelah risiko diterima pemilik.
+- Dependency: ADR-013.
+- Status: BLOCKED ON OWNER DECISION.
 
 ## Phase 2 — Backend/auth/AI (BLOCKED sampai SPIKE-01 lulus dan owner menyetujui)
 
@@ -136,9 +168,9 @@ Versi: 0.2
 ### AI-01 — Registry sumber knowledge
 - Size: M
 - Requirements/AC: FR-09, FR-13; AC-09, AC-16.
-- Output: metadata sumber dan status review.
-- Verify/evidence: sumber draft/tanpa izin tidak masuk retrieval.
-- Dependency: KB-01.
+- Output: metadata sumber/status review untuk retrieval; isi KB tidak di repo publik.
+- Verify/evidence: sumber REVIEW NEEDED/RETIRED/tanpa izin tidak masuk retrieval.
+- Dependency: KB-02.
 - Status: BLOCKED.
 
 ### AI-02 — Pencarian/retrieval baseline
@@ -183,8 +215,24 @@ Versi: 0.2
 - Size: M
 - Requirements/AC: seluruh requirements dan AC dalam scope yang disetujui.
 - Output: laporan release candidate dan risiko tersisa.
-- Verify/evidence: seluruh AC kritis lulus; tes yang belum dilakukan berstatus UNCONFIRMED.
+- Verify/evidence: seluruh AC kritis (AC berprioritas MUST yang disetujui di matriks 02) lulus; tes belum dilakukan berstatus UNCONFIRMED.
 - Status: BLOCKED ON OWNER APPROVAL.
+
+### DOC-06 — Setujui steering (04)
+- Size: S
+- Requirements/AC: governance; AC-11, AC-12.
+- Output: pemilik menyetujui atau memberi catatan pada 04-steering.md.
+- Verify/evidence: persetujuan eksplisit; sebelum itu steering PROPOSED.
+- Dependency: tidak ada.
+- Status: BLOCKED ON OWNER DECISION.
+
+### DOC-07 — Bersihkan penanda REVISI AUDIT sebelum merge
+- Size: S
+- Requirements/AC: PR-only; AC-11, AC-12.
+- Output: penanda audit dibersihkan hanya atas permintaan/persetujuan pemilik.
+- Verify/evidence: diff hanya mengubah penanda yang diminta.
+- Dependency: persetujuan pemilik dan review akhir PR.
+- Status: OWNER TO DECIDE.
 
 ## Definition of done
 
