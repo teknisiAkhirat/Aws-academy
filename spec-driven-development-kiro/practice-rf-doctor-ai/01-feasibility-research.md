@@ -1,9 +1,8 @@
 # Riset Kelayakan — RF Doctor AI
 
-> [REVISI AUDIT 2026-10-17] Klaim
+> [REVISI AUDIT 2026-10-17]
 > [REVISI AUDIT 2026-10-17 B2]
-
-Klaim yang belum diuji pada lingkungan pemilik secara eksplisit ditandai UNCONFIRMED.
+> Klaim yang belum diuji pada lingkungan pemilik secara eksplisit ditandai UNCONFIRMED.
 
 Status: INITIAL RESEARCH — belum menjadi bukti kelayakan akhir  
 Tanggal pemeriksaan dokumen: 2026-10-17
