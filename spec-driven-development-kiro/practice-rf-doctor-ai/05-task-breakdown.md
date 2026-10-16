@@ -134,14 +134,14 @@ Versi: 0.2
 - Dependency: ADR-013.
 - Status: BLOCKED ON OWNER DECISION.
 
-## Phase 2 — Backend/auth/AI (BLOCKED sampai SPIKE-01 lulus dan owner menyetujui)
+## Phase 2 — Backend/auth/AI (BLOCKED sampai SPIKE-01A/B lulus dan owner menyetujui)
 
 ### BE-01 — Backend scaffold
 - Size: M
 - Requirements/AC: NFR-03, NFR-04; AC-06, AC-26, AC-30.
 - Output: minimal backend hanya setelah platform dipilih.
 - Verify/evidence: build/test dan deployment non-production jika disetujui.
-- Status: BLOCKED ON SPIKE-01 + OWNER APPROVAL.
+- Status: BLOCKED ON SPIKE-01A/B + OWNER APPROVAL.
 
 ### BE-02 — API schema dan validasi
 - Size: M
@@ -186,7 +186,7 @@ Versi: 0.2
 - Requirements/AC: FR-05, FR-14, FR-16; NFR-03, NFR-04; AC-05, AC-20, AC-22, AC-30.
 - Output: satu provider terpilih di belakang interface.
 - Verify/evidence: timeout, error provider, output invalid, rate limit, dan estimasi biaya.
-- Dependency: SPIKE-01, ADR-004, ADR-011.
+- Dependency: SPIKE-01A dan SPIKE-01B (sesuai gerbang yang disetujui), ADR-004, ADR-011.
 - Status: BLOCKED.
 
 ### AI-04 — Respons diagnosis terstruktur
