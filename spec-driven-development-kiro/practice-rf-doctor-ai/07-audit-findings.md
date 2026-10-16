@@ -1,6 +1,6 @@
 # Audit Findings — RF Doctor AI
 
-> [REVISI AUDIT 2026-10-17] Register ini mencatat temuan audit, bukan keputusan final. Status diperbarui hanya berdasarkan bukti.
+> [REVISI AUDIT 2026-10-17 B2] Register ini mencatat temuan audit, bukan keputusan final. Status diperbarui hanya berdasarkan bukti.
 
 Status: OPEN FOR OWNER REVIEW  
 Ruang lingkup: dokumen Markdown di folder practice-rf-doctor-ai.
@@ -21,6 +21,12 @@ Ruang lingkup: dokumen Markdown di folder practice-rf-doctor-ai.
 | AUD-12 | Status README/steering sebelumnya dapat terbaca sebagai keputusan sudah disepakati, padahal banyak keputusan masih OPEN. | MEDIUM | README.md, 04-steering.md | DIREVISI — arah awal belum final dan steering menunggu persetujuan |
 | AUD-13 | Tidak ada batas biaya bulanan yang disetujui. | HIGH | 06-decision-log.md, 02-requirements.md | OPEN — ADR-011, OWNER TO DECIDE |
 | AUD-14 | Vercel dilaporkan membangun proyek audio-document-player pada PR dokumentasi. Tindakan yang diminta adalah pemeriksaan konfigurasi dashboard Vercel oleh pemilik; jangan mengubah konfigurasi melalui repository ini sebagai bagian audit RF Doctor AI. | MEDIUM | Di luar folder RF Doctor AI; konfigurasi dashboard Vercel | OPEN — tindakan pemilik di dashboard Vercel |
+
+## Terverifikasi aman [REVISI AUDIT 2026-10-17 B2]
+
+- Rujukan ADR harus cocok dengan ID yang tercatat di 06-decision-log.md; konsistensi otomatis pascaperubahan perlu diperiksa.
+- Tidak ada status ADR yang diubah menjadi ACCEPTED/APPROVED.
+- “DIREVISI DOKUMEN” bukan bukti SPIKE, build, atau uji perangkat lulus.
 
 ## Catatan status
 
