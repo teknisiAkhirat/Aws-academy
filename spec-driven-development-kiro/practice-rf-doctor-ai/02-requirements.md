@@ -13,7 +13,7 @@ Teknisi membutuhkan catatan kasus yang rapi dan bantuan untuk memilih langkah di
 
 Teknisi HP yang menggunakan perangkat Android miliknya untuk menangani banyak perangkat pelanggan.
 
-## Functional requirements
+## Functional requirements [REVISI AUDIT 2026-10-17 B2]
 
 - FR-01: Pengguna dapat membuat kasus dengan ID internal, merek/model perangkat, gejala utama, konteks jaringan, dan catatan awal.
 - FR-02: Form harus membolehkan informasi yang belum diketahui tetap kosong dan menandainya sebagai UNKNOWN; tidak boleh mengarang nilai default.
@@ -34,7 +34,7 @@ Teknisi HP yang menggunakan perangkat Android miliknya untuk menangani banyak pe
 - FR-17: Pengguna dapat mengekspor ringkasan kasus tanpa menyertakan identifier sensitif secara default. Format ekspor masih OPEN.
 - FR-18: [USULAN — belum disetujui] Pengguna dapat menghapus atau mengarsipkan kasus setelah konfirmasi; retensi/penghapusan mengikuti ADR-013.
 
-## Non-functional requirements
+## Non-functional requirements [REVISI AUDIT 2026-10-17 B2]
 
 - NFR-01: Bahasa antarmuka utama adalah Bahasa Indonesia yang mudah dipahami.
 - NFR-02: Antarmuka mobile-first, cocok untuk layar Android.
@@ -57,7 +57,7 @@ Teknisi HP yang menggunakan perangkat Android miliknya untuk menangani banyak pe
 - Knowledge-base ingestion untuk dokumen yang tidak memiliki izin penggunaan.
 - Multi-tenant/organisasi dan billing pengguna sampai kebutuhan terbukti.
 
-## Acceptance criteria
+## Acceptance criteria [REVISI AUDIT 2026-10-17 B2]
 
 - AC-01: Kasus baru dapat disimpan dengan informasi minimal dan ID internal unik.
 - AC-02: Data yang tidak diketahui ditampilkan sebagai UNKNOWN/kosong, bukan nol.
