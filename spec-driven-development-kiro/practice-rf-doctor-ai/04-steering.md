@@ -40,6 +40,10 @@ Jika implementasi bertentangan dengan spesifikasi, jangan mengubah spesifikasi d
 
 ## 3. NO EVIDENCE, NO DONE [REVISI AUDIT 2026-10-17 B2]
 
+### Aturan data dan repositori [REVISI AUDIT 2026-10-17 B2]
+
+Repo ini PUBLIK. Dilarang commit catatan servis (mentah maupun anonim), isi KB, kasus SPIKE, atau output model. Data disimpan di lokasi yang diputuskan ADR-012. Agen/provider AI TIDAK boleh menerima catatan mentah; pemilik menganonimkan lebih dulu. Daftar periksa: nama, nomor telepon, IMEI/IMSI/ICCID, email, NIK, alamat, dan pengenal lain. Evidence PR hanya ringkasan/hasil agregat, bukan data kasus. Sanitizer bukan jaminan anonimisasi.
+
 Jika hanya GitHub API yang tersedia, laporkan itu; jangan mengklaim `git pull --ff-only`, command shell, atau commit/push lokal dijalankan. Pemeriksaan API bukan hasil command lokal.
 
 Setiap task wajib melaporkan:
@@ -53,11 +57,8 @@ Setiap task wajib melaporkan:
 
 Jangan mengklaim tes PASS jika tidak dijalankan. Tes yang belum dijalankan diberi status UNCONFIRMED. Jika lingkungan eksekusi tidak tersedia, nyatakan keterbatasan dan jangan menyamakan pemeriksaan API dengan hasil command lokal.
 
-## 4. Aturan data dan repositori [REVISI AUDIT 2026-10-17 B2]
 
-Repo ini PUBLIK. Dilarang commit catatan servis (mentah maupun anonim), isi KB, kasus SPIKE, atau output model. Data disimpan di lokasi yang diputuskan ADR-012. Agen/provider AI TIDAK boleh menerima catatan mentah; pemilik menganonimkan lebih dulu. Daftar periksa: nama, nomor telepon, IMEI/IMSI/ICCID, email, NIK, alamat, dan pengenal lain. Evidence PR hanya ringkasan/hasil agregat, bukan data kasus. Sanitizer bukan jaminan anonimisasi.
-
-## 5. Batas kewenangan AI
+## 4. Batas kewenangan AI
 
 AI coding agent boleh:
 - membaca repo dan spesifikasi;
@@ -77,7 +78,7 @@ AI coding agent tidak boleh tanpa persetujuan:
 - menyatakan komponen rusak tanpa bukti teknis;
 - mengubah status keputusan OPEN menjadi final.
 
-## 6. Standar diagnosis AI
+## 5. Standar diagnosis AI
 
 - Pisahkan fakta, laporan, hipotesis, dan hasil verifikasi.
 - Jangan mengarang nilai pengukuran, sumber, skema, nomor komponen, atau langkah service.
@@ -88,7 +89,7 @@ AI coding agent tidak boleh tanpa persetujuan:
 - Hindari menyimpan data pelanggan yang tidak diperlukan.
 - Ringkasan bukti yang diusulkan berisi jumlah pengukuran mendukung/bertentangan/belum diperiksa; status PROPOSED. Label LOW/MEDIUM/HIGH opsional dan tidak dipilih model.
 
-## 7. Standar kode dan dokumen
+## 6. Standar kode dan dokumen
 
 - Gunakan dependency minimal dan versi yang didukung.
 - Validasi data pada batas API.
@@ -100,7 +101,7 @@ AI coding agent tidak boleh tanpa persetujuan:
 - Dokumentasikan keputusan penting di decision log.
 - Untuk perubahan audit, tandai bagian yang berubah dengan [REVISI AUDIT YYYY-MM-DD].
 
-## 8. Proses review
+## 7. Proses review
 
 PR harus menjelaskan:
 - tujuan;
@@ -113,7 +114,7 @@ PR harus menjelaskan:
 
 PR belum layak merge jika acceptance criteria belum terpenuhi, evidence hilang, ada secret, atau tes penting gagal. Jangan mengklaim command lokal telah dijalankan bila hanya memeriksa file melalui GitHub API.
 
-## 9. Belajar sambil membangun
+## 8. Belajar sambil membangun
 
 Setiap batch implementasi perlu ringkasan tutor singkat:
 - konsep teknis yang dipakai;
