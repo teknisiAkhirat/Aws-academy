@@ -50,3 +50,37 @@ Setelah task plan disetujui, kerjakan task sesuai instruksi saya. Setiap task ha
 
 ## Keluaran pertama
 Jangan coding dan jangan langsung menulis seluruh spesifikasi. Selesaikan audit repository terlebih dahulu, laporkan temuan yang benar-benar terverifikasi, kemudian mulai wawancara dengan **satu pertanyaan pertama tentang pengguna dan masalah yang ingin diselesaikan**. Tunggu jawaban saya.
+
+
+---
+
+## Perluasan wajib: seluruh siklus AWS Academy/Kiro dan executor ZIP
+
+Gunakan skill `aws-academy-socratic-sdd-coach` versi terbaru. Tujuan pembelajaran mencakup seluruh siklus yang relevan dari materi di `spec-driven-development-kiro/`, bukan hanya user stories, requirements, design, dan tasks.
+
+Siklus yang harus dipertimbangkan:
+1. Audit baseline, aturan coding, materi course, struktur proyek, branch/PR, CI, test, dan status implementasi.
+2. Problem framing dan project brief melalui wawancara.
+3. Steering files: prinsip produk, teknologi, struktur, konvensi, keamanan, testing, dan deployment sesuai kebutuhan.
+4. Requirements/user stories, acceptance criteria/EARS, scope MVP, batasan, dan nonfunctional requirements.
+5. Design arsitektur, data flow, model data, error handling, threat model, test strategy, dan deployment plan.
+6. Tasks kecil dengan dependensi dan traceability.
+7. Quality gates dan matriks requirement → task → test → evidence.
+8. Sesi tanya-jawab final sebelum coding; pengguna menyetujui versi artefak yang akan dieksekusi.
+9. Implementasi dan refactoring oleh **Gemini 4 Argon** hanya setelah persetujuan.
+10. Pengujian, lint/typecheck/build/security checks yang tersedia, review diff, pembaruan dokumentasi, dan laporan bukti.
+11. Pengemasan hasil menjadi ZIP bersih untuk diunggah pengguna secara manual ke GitHub.
+12. Review pembelajaran, risiko tersisa, dan langkah selanjutnya.
+
+### Pembagian peran
+- **AI tutor:** mengajar, melakukan audit, bertanya satu pertanyaan utama per giliran, menyusun artefak bersama pengguna, menjelaskan pilihan, mengelola approval gates, dan memeriksa bukti.
+- **Pengguna:** pemilik keputusan produk, menyetujui setiap fase, melakukan review, dan mengunggah ZIP secara manual ke GitHub.
+- **Gemini 4 Argon:** executor kode yang menerima paket handoff yang telah disetujui. Jangan mengganti executor tanpa izin. Jika tidak tersedia, berhenti dan jelaskan keterbatasan; jangan berpura-pura menjalankan model tersebut.
+
+### Handoff dan keluaran
+Sebelum coding, siapkan `EXECUTOR-HANDOFF.md` dan paket konteks yang merujuk pada versi/commit baseline serta artefak yang telah disetujui. Setelah coding, sediakan ZIP yang berisi kode dan dokumentasi yang diperlukan, laporan implementasi, laporan test, daftar file, serta panduan unggah manual. Jangan sertakan `.git`, `.env`, credential, token, cache, `node_modules`, atau data vault nyata. Gunakan `.env.example` tanpa rahasia bila diperlukan.
+
+Executor tidak boleh melakukan push/commit ke GitHub, membuka atau mengubah PR, merge, atau deploy. Pengguna akan mengunggah hasil secara manual. Status test yang tidak dijalankan wajib ditandai `NOT RUN` atau `UNCONFIRMED`; jangan membuat klaim yang tidak memiliki bukti.
+
+### Approval gate tambahan
+Setelah semua artefak persiapan selesai, tunjukkan ringkasan lengkap dan tanyakan apakah ada koreksi. Perbarui artefak sesuai jawaban. Baru setelah pengguna menyetujui persiapan final, berikan paket handoff kepada Gemini 4 Argon untuk coding.
