@@ -1,0 +1,7 @@
+# [REVISI AUDIT 2026-10-17 B2]
+# Repository publik: data servis, KB, kasus SPIKE, dan output model harus disimpan di luar repo.
+data/
+kb/
+spike/
+cases/
+*.private.md
