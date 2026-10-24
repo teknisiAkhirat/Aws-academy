@@ -208,4 +208,8 @@ Untuk informasi lebih lanjut tentang sertifikat dan penyelesaian course, silakan
 - [ ] Saya sudah mengetahui cara menjaga API key dan token agar tetap rahasia.
 - [ ] Saya siap mulai mempelajari Modul 1: RAG.
 
+**Catatan peta belajar:** Peta belajar 8 tahap di Modul 00 adalah rancangan pribadi, bukan struktur resmi (resmi: Modul 1 RAG, Modul 2 Fine-tuning).
+
+**Terakhir diperiksa terhadap sumber:** 2026-10-24
+
 **Pengingat:** tujuan kita bukan sekadar memperoleh sertifikat. Yang lebih penting adalah memahami konsepnya, berlatih secara bertahap, dan mampu membangun aplikasi AI yang bermanfaat.
