@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brankas Password</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--tx:#1b1f24;--mut:#6b7280;--pr:#0f766e;--dg:#b91c1c;--bd:#d9dde3}
+@media (prefers-color-scheme:dark){:root{--bg:#111418;--card:#1b2027;--tx:#e8eaed;--mut:#9aa3af;--pr:#2dd4bf;--dg:#f87171;--bd:#2c333d}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,sans-serif}
+main{max-width:560px;margin:0 auto;padding:16px}
+h1{font-size:1.3rem;margin:8px 0 4px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin:12px 0}
+input,textarea{width:100%;padding:11px;margin:6px 0;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+button{padding:10px 14px;border:0;border-radius:8px;background:var(--pr);color:#fff;font:inherit;font-weight:600;margin:4px 4px 4px 0}
+button.sec{background:transparent;color:var(--tx);border:1px solid var(--bd)}
+button.dg{background:var(--dg)}
+.mut{color:var(--mut);font-size:.9rem}
+.err{color:var(--dg);font-size:.95rem;min-height:1.2em}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+.pw{font-family:ui-monospace,monospace;word-break:break-all}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const SB_URL = "https://hitmyfexknnthllsujrf.supabase.co";
+const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdG15ZmV4a25udGhsbHN1anJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyNzg2MzgsImV4cCI6MjEwMjg1NDYzOH0.IsVMq_Sqa_Hi60oTfvS-tlh5qFr323QJmOSeU7eYvoY";
+const sb = supabase.createClient(SB_URL, SB_KEY);
+
+const ITER = 600000, IDLE_MS = 5 * 60 * 1000, CLIP_MS = 30 * 1000;
+const app = document.getElementById("app");
+const te = new TextEncoder(), td = new TextDecoder();
+let key = null, items = [], idleTimer = null, failed = 0;
+
+// ---------- util ----------
+function el(tag, attrs, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === "class") n.className = v;
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v);
+  }
+  for (const c of kids) n.append(c);
+  return n;
+}
+const b64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
+const unb64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+function show(...nodes) { app.replaceChildren(...nodes); }
+function genPw(n = 20) {
+  const cs = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*-_=+";
+  const max = Math.floor(256 / cs.length) * cs.length;
+  let out = "";
+  while (out.length < n) {
+    for (const x of crypto.getRandomValues(new Uint8Array(32))) {
+      if (x < max && out.length < n) out += cs[x % cs.length];
+    }
+  }
+  return out;
+}
+
+// ---------- crypto ----------
+async function deriveKey(pw, salt) {
+  const km = await crypto.subtle.importKey("raw", te.encode(pw), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt, iterations: ITER, hash: "SHA-256" },
+    km, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+}
+async function encrypt(obj) {
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, te.encode(JSON.stringify(obj)));
+  return { payload: b64(ct), iv: b64(iv) };
+}
+async function decrypt(payload, iv) {
+  const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(iv) }, key, unb64(payload));
+  return JSON.parse(td.decode(pt));
+}
+
+// ---------- lock / idle ----------
+function resetIdle() {
+  clearTimeout(idleTimer);
+  if (key) idleTimer = setTimeout(lock, IDLE_MS);
+}
+["click", "keydown", "touchstart"].forEach((e) => document.addEventListener(e, resetIdle, { passive: true }));
+function lock() {
+  key = null; items = []; clearTimeout(idleTimer);
+  viewUnlock();
+}
+
+// ---------- views ----------
+function viewAuth(msg) {
+  const email = el("input", { type: "email", placeholder: "Email", autocomplete: "username" });
+  const pass = el("input", { type: "password", placeholder: "Password akun (bukan master password)", autocomplete: "current-password" });
+  const err = el("div", { class: "err" }, msg || "");
+  const go = async (signup) => {
+    err.textContent = "";
+    const fn = signup ? sb.auth.signUp.bind(sb.auth) : sb.auth.signInWithPassword.bind(sb.auth);
+    const { data, error } = await fn({ email: email.value.trim(), password: pass.value });
+    if (error) { err.textContent = error.message; return; }
+    if (signup && !data.session) { err.textContent = "Cek email untuk konfirmasi, lalu masuk."; return; }
+    viewUnlock();
+  };
+  show(
+    el("h1", {}, "🔐 Brankas Password"),
+    el("div", { class: "mut" }, "Masuk dulu ke akun. Setelah itu kamu akan diminta master password untuk membuka isi brankas."),
+    el("div", { class: "card" }, email, pass, err,
+      el("button", { onclick: () => go(false) }, "Masuk"),
+      el("button", { class: "sec", onclick: () => go(true) }, "Daftar"))
+  );
+}
+
+async function viewUnlock(msg) {
+  const { data: s } = await sb.auth.getSession();
+  if (!s.session) return viewAuth();
+  const { data: meta, error } = await sb.from("vault_meta").select("*").maybeSingle();
+  if (error) return viewAuth("Gagal membaca data: " + error.message);
+  const creating = !meta;
+  const pw = el("input", { type: "password", placeholder: "Master password", autocomplete: "off" });
+  const pw2 = el("input", { type: "password", placeholder: "Ulangi master password", autocomplete: "off" });
+  const err = el("div", { class: "err" }, msg || "");
+  const go = async () => {
+    err.textContent = "";
+    if (creating) {
+      if (pw.value.length < 12) { err.textContent = "Minimal 12 karakter. Pakai kalimat panjang yang mudah kamu ingat."; return; }
+      if (pw.value !== pw2.value) { err.textContent = "Kedua isian tidak sama."; return; }
+    }
+    err.textContent = "Memproses...";
+    try {
+      if (creating) {
+        const salt = crypto.getRandomValues(new Uint8Array(16));
+        key = await deriveKey(pw.value, salt);
+        const c = await encrypt({ ok: "vault-ok" });
+        const { error: e } = await sb.from("vault_meta").insert({ salt: b64(salt), check_payload: c.payload, check_iv: c.iv });
+        if (e) { key = null; err.textContent = e.message; return; }
+      } else {
+        key = await deriveKey(pw.value, unb64(meta.salt));
+        const c = await decrypt(meta.check_payload, meta.check_iv);
+        if (c.ok !== "vault-ok") throw new Error("bad");
+      }
+    } catch (e) { key = null; err.textContent = "Master password salah."; return; }
+    pw.value = ""; pw2.value = "";
+    await loadItems(); viewVault(); resetIdle();
+  };
+  pw.addEventListener("keydown", (e) => { if (e.key === "Enter" && !creating) go(); });
+  show(
+    el("h1", {}, creating ? "Buat master password" : "Buka brankas"),
+    creating ? el("div", { class: "card mut" },
+      "Master password TIDAK pernah dikirim ke server dan TIDAK bisa dipulihkan. Kalau lupa, semua isi brankas hilang permanen. Tulis di kertas dan simpan di tempat aman.") : "",
+    el("div", { class: "card" }, pw, creating ? pw2 : "", err,
+      el("button", { onclick: go }, creating ? "Buat brankas" : "Buka"),
+      el("button", { class: "sec", onclick: async () => { await sb.auth.signOut(); key = null; viewAuth(); } }, "Keluar akun"))
+  );
+}
+
+async function loadItems() {
+  const { data, error } = await sb.from("vault_items").select("id,payload,iv").order("created_at");
+  if (error) { items = []; return; }
+  items = []; failed = 0;
+  for (const r of data) {
+    try { items.push({ id: r.id, ...(await decrypt(r.payload, r.iv)) }); } catch { failed++; }
+  }
+  items.sort((a, b) => (a.site || "").localeCompare(b.site || ""));
+}
+
+function viewVault() {
+  const q = el("input", { type: "search", placeholder: "Cari situs/akun..." });
+  const list = el("div", {});
+  const draw = () => {
+    const f = q.value.toLowerCase();
+    const rows = items.filter((i) => (i.site + " " + i.user).toLowerCase().includes(f));
+    list.replaceChildren(...(rows.length ? rows.map(card) : [el("div", { class: "mut" }, "Belum ada data.")]));
+  };
+  const card = (i) => {
+    const pwEl = el("div", { class: "pw mut" }, "••••••••••");
+    let shown = false;
+    return el("div", { class: "card" },
+      el("strong", {}, i.site || "(tanpa nama)"),
+      el("div", { class: "mut" }, i.user || ""),
+      pwEl,
+      i.note ? el("div", { class: "mut" }, i.note) : "",
+      el("div", { class: "row" },
+        el("button", { class: "sec", onclick: () => { shown = !shown; pwEl.textContent = shown ? i.pass : "••••••••••"; } }, "Lihat"),
+        el("button", { onclick: async (e) => {
+          try {
+            await navigator.clipboard.writeText(i.pass);
+            e.target.textContent = "Tersalin (hapus 30 dtk)";
+            setTimeout(() => { navigator.clipboard.writeText("").catch(() => {}); e.target.textContent = "Salin"; }, CLIP_MS);
+          } catch { e.target.textContent = "Gagal menyalin"; }
+        } }, "Salin"),
+        el("button", { class: "sec", onclick: () => viewForm(i) }, "Ubah")));
+  };
+  q.addEventListener("input", draw);
+  draw();
+  show(
+    el("h1", {}, "🔐 Brankas"),
+    failed ? el("div", { class: "err" }, failed + " item gagal didekripsi.") : "",
+    el("div", { class: "row" },
+      el("button", { onclick: () => viewForm(null) }, "+ Tambah"),
+      el("button", { class: "sec", onclick: lock }, "Kunci")),
+    q, list,
+    el("div", { class: "mut" }, "Terkunci otomatis setelah 5 menit tidak aktif.")
+  );
+}
+
+function viewForm(item) {
+  const site = el("input", { placeholder: "Situs / aplikasi", value: item?.site || "" });
+  const user = el("input", { placeholder: "Username / email", value: item?.user || "", autocomplete: "off" });
+  const pass = el("input", { placeholder: "Password", value: item?.pass || "", autocomplete: "off" });
+  const note = el("textarea", { placeholder: "Catatan (opsional)", rows: "2" }, item?.note || "");
+  const err = el("div", { class: "err" });
+  const save = async () => {
+    if (!site.value.trim() || !pass.value) { err.textContent = "Nama situs dan password wajib diisi."; return; }
+    const c = await encrypt({ site: site.value.trim(), user: user.value.trim(), pass: pass.value, note: note.value });
+    const res = item
+      ? await sb.from("vault_items").update({ ...c, updated_at: new Date().toISOString() }).eq("id", item.id)
+      : await sb.from("vault_items").insert(c);
+    if (res.error) { err.textContent = res.error.message; return; }
+    await loadItems(); viewVault();
+  };
+  show(
+    el("h1", {}, item ? "Ubah item" : "Tambah item"),
+    el("div", { class: "card" }, site, user, pass, note, err,
+      el("button", { class: "sec", onclick: () => { pass.value = genPw(); } }, "Buat password acak"),
+      el("div", {},
+        el("button", { onclick: save }, "Simpan"),
+        el("button", { class: "sec", onclick: viewVault }, "Batal"),
+        item ? el("button", { class: "dg", onclick: async () => {
+          if (!confirm("Hapus item ini permanen?")) return;
+          const { error } = await sb.from("vault_items").delete().eq("id", item.id);
+          if (error) { err.textContent = error.message; return; }
+          await loadItems(); viewVault();
+        } }, "Hapus") : ""))
+  );
+}
+
+// ---------- start ----------
+if (!window.isSecureContext || !crypto.subtle) {
+  show(el("h1", {}, "Tidak aman"), el("div", { class: "err" }, "Halaman ini harus dibuka lewat HTTPS agar enkripsi browser bisa bekerja."));
+} else {
+  viewUnlock();
+}
+</script>
+</body>
+</html>
